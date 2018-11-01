@@ -61,7 +61,7 @@
 	
 	<!-- others: such as change-bg, time... -->
 	<p class="page-name-other">
-		10/30/2018 
+		11/1/2018 
 		<style type="text/css">
 	header:after {
 		content: '';
@@ -184,7 +184,7 @@
 						
 							<i class="fa fa-tags"></i>
 							
-								<a href="#笔记" title="笔记" rel="2">笔记</a>&nbsp;
+								<a href="#SQL注入 笔记" title="SQL注入 笔记" rel="1">SQL注入 笔记</a>&nbsp;
 													 											
 						
 					</span>
@@ -195,7 +195,6 @@
 				<div class="content" id="post-content">
 					
 						<p>SQL注入一直都是web应用层上的高危漏洞之一，在此做一次SQL注入系统学习的笔记。</p>
-<p># </p>
 <h1 id="1-SQL注入原理"><a href="#1-SQL注入原理" class="headerlink" title="1.SQL注入原理"></a>1.SQL注入原理</h1><p>所谓SQL注入，就是攻击者把SQL命令插入到web表单的输入域或者页面请求的查询字符串，进而欺骗服务器执行恶意的SQL命令。</p>
 <h1 id="2-判断是否是能进行sql注入"><a href="#2-判断是否是能进行sql注入" class="headerlink" title="2.判断是否是能进行sql注入"></a>2.判断是否是能进行sql注入</h1><h2 id="0x01-单引号判断常规注入点"><a href="#0x01-单引号判断常规注入点" class="headerlink" title="0x01 单引号判断常规注入点"></a>0x01 单引号判断常规注入点</h2><p>http:xxx.com/1.php?id=1’</p>
 <p>在参数后面加单引号，这是最常用且最简单的测试方法，如果页面返回错误，则存在sql注入漏洞。</p>
@@ -210,9 +209,10 @@
 <p>这里的$keyword是用户的输入</p>
 <p>当我们传入keyword=vint%’ and 1=1 and ‘%’=’%</p>
 <p>该查询语句最终则是这样的</p>
-<p>SELECT * FROM table WHERE keyword like ‘%vint%’ and 1=1 and ‘%’=’%’</p>
-<p>SELECT * FROM table WHERE keyword like ‘%vint%’ and 1=2 and ‘%’=’%’</p>
-<h1 id="3-判断数据库类型"><a href="#3-判断数据库类型" class="headerlink" title="3.判断数据库类型"></a>3.判断数据库类型</h1><p>在SQL注入前需先判断数据库的类型，因为不同的数据库，SQL注入的方法也不尽相同。</p>
+<pre><code>SELECT * FROM table WHERE keyword like &#39;%vint%&#39; and 1=1 and &#39;%&#39;=&#39;%’
+
+SELECT * FROM table WHERE keyword like &#39;%vint%&#39; and 1=2 and &#39;%&#39;=&#39;%’
+</code></pre><h1 id="3-判断数据库类型"><a href="#3-判断数据库类型" class="headerlink" title="3.判断数据库类型"></a>3.判断数据库类型</h1><p>在SQL注入前需先判断数据库的类型，因为不同的数据库，SQL注入的方法也不尽相同。</p>
 <h2 id="0x01-一般数据库搭配"><a href="#0x01-一般数据库搭配" class="headerlink" title="0x01 一般数据库搭配"></a>0x01 一般数据库搭配</h2><p>常见的数据库有oracle，mysql，sqlserver，access，mssql，mongodb等。</p>
 <p>现在主流的数据库搭配，最常出现的就是access+asp，或者sqlserver+asp，还有mysql+php。</p>
 <p>其中，在现在来说出现得最多的又是mysql+php。</p>
@@ -305,7 +305,8 @@
 <p>1.floor()</p>
 <p>select <em> from text where id=1 and (select 1 from (select count(</em>),concat(user(),0x3a,floor(rand(0)*2))as a from information_schema.tables group by a)b);</p>
 <p><img src="/post/10.28/23.png" alt="img"></p>
-<p>这里有一篇文章对这种报错注入讲解的很好：<a href="https://blog.csdn.net/qq_32400847/article/details/53453098" target="_blank" rel="noopener">https://blog.csdn.net/qq_32400847/article/details/53453098</a></p>
+<p>这里有一篇文章对这种报错注入讲解的很好：</p>
+<p>[]: <a href="https://blog.csdn.net/qq_32400847/article/details/53453098" target="_blank" rel="noopener">https://blog.csdn.net/qq_32400847/article/details/53453098</a></p>
 <p>2.extractvalue()</p>
 <p>extractvalue(xml_frag,xpath_expr)</p>
 <p>extractvalue()接受两个字符串参数，一个xml标记xml_frag的片段和一个xpath表达式xpath_expr(也称为定位符)。这个函数返回第一个文本节点的文本。我们可以在xpath中填写获得我们想要的信息的语句。</p>
@@ -430,6 +431,12 @@
 
 		<ul class="am-pagination">
     
+    	<li class="am-pagination-prev">
+   		<a class="pull-left" href="/2018/11/01/2018.11.1/" title="CSRF漏洞学习">
+      		&laquo; 上一篇
+		</a>
+		</li>
+	
 	
 		<li class="am-pagination-next">
 		<a class="pull-right" href="/2018/09/17/2018.10.17/" title="VulnHub-LazySysAdmin 过关笔记">
